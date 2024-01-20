@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/home.dart';
+import 'package:sample/utils/mongodb.dart';
 import 'constants.dart';
 
 class Login extends StatefulWidget {
@@ -32,12 +33,27 @@ class _LoginState extends State<Login> {
           .webAuthentication(scheme: dotenv.env['AUTH0_CUSTOM_SCHEME'])
           .login();
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Home(
-                      user: credentials.user,
-                    )));
+      if (await MongoDB.userStage(credentials.user.email as String) == "complete") {
+       // go to home page
+        print('go to home page');
+      } else if (await MongoDB.userStage(credentials.user.email as String) == "first_time") {
+       print('go to create a course flow');
+        // go to create a course flow
+      }else if (await MongoDB.userStage(credentials.user.email as String) == "no_username") {
+        // go to set up username page
+        print('go to username set up page');
+      }else {
+        // user is new
+        print('user does not exist');
+        await MongoDB.addUser(credentials.user.email as String);
+      }
+
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => Home(
+        //               user: credentials.user,
+        //             )));
 
     } catch (e) {
       print(e);
