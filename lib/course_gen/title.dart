@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sample/course_gen/units.dart';
 
 class TitlePage extends StatefulWidget {
   const TitlePage({super.key});
@@ -23,10 +24,18 @@ class _TitlePageState extends State<TitlePage> {
                 SizedBox(height:32),
                 Align(
                   alignment: Alignment.bottomLeft,
-                  child: Icon(
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const UnitsPage(course: 'hello')),
+                      );
+                    },
+                    icon: Icon(
                       Icons.arrow_back_ios_new_rounded,
                       size: 40,
-                    color: Color(0xff888888),
+                      color: Color(0xff888888),
+                    )
                   ),
                 ),
 
@@ -76,7 +85,9 @@ class _TitlePageState extends State<TitlePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+
+                    },
                     child: Text(
                         'Get Started',
                       style: TextStyle(
