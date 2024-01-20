@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sample/course_gen/units.dart';
+import 'package:sample/screens/course_gen/units.dart';
 
 class TitlePage extends StatefulWidget {
   const TitlePage({super.key});

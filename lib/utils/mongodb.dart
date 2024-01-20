@@ -19,8 +19,7 @@ class MongoDB {
   }
 
   static Future<String> userStage(Map user) async {
-
-    return user['username'] != null
+    return user['username'] != ''
             ? user['completed']
                 ? 'complete'
                 : 'first_time'
@@ -31,8 +30,8 @@ class MongoDB {
   static Future<User> getUser(String email) async {
     var val = await _db
         ?.collection('users')
-        .findOne(where.eq('email', email).fields(['email']));
-    return User(email: val['email'], username: val['username'], completed: val['completed'], stage: val != null ?  await userStage(val): 'new_user');
+        .findOne(where.eq('email', email).fields(['email', 'username', 'completed']));
+    return User(email: val['email'], username: val['username'], completed: val['completed'], stage: val != '' ?  await userStage(val): 'new_user');
   }
 
   static Future<void> addUser(String email) async {
@@ -40,7 +39,7 @@ class MongoDB {
       await _db?.collection('users').insert({
         '_id': M.ObjectId(),
         'email': email,
-        'username': null,
+        'username': '',
         'completed': false,
       });
     } catch (e) {
