@@ -48,3 +48,8 @@ app.*.map.json
 
 .env
 android/app/src/main/res/values/strings.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="com_auth0_domain">dev-t1qeokemoah3ctwm.us.auth0.com</string>
+    <string name="com_auth0_scheme">com.auth0.sample</string>
+</resources>
