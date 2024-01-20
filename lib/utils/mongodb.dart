@@ -57,4 +57,15 @@ class MongoDB {
       print(e);
     }
   }
+
+  static Future<void> addCompleted(String email) async {
+    try {
+      await _db?.collection('users').update(
+        where.eq('email', email),
+        modify.set('completed', true),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 }
