@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/screens/course_gen/units.dart';
+import 'package:sample/utils/course_generator.dart';
 import 'package:sample/utils/models/user.dart';
 
 class TitleScreen extends StatelessWidget {
-  TitleScreen({super.key, required User user, required bool firstTime});
+  User user;
+  TitleScreen({super.key, required User user, required bool firstTime, required this.user});
+
 
 
   TextEditingController _textController = TextEditingController();
@@ -19,16 +22,10 @@ class TitleScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("One more thing...",
+            Text("What we learning?",
               style: GoogleFonts.figtree(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            Text("What's your username?",
-              style: GoogleFonts.figtree(
-                fontSize: 24,
                 color: Colors.black,
               ),
             ),
@@ -38,8 +35,8 @@ class TitleScreen extends StatelessWidget {
                 child: TextField(
                   controller: _textController,
                   decoration: InputDecoration(
-                    labelText: 'Be Creative!',
-                    hintText: 'CrazyTiger123',
+                    labelText: 'Anything you want!',
+                    hintText: 'Biology of Cancer',
                     labelStyle: GoogleFonts.figtree(
                       fontSize: 24.0,
                       color: Colors.black,
@@ -58,11 +55,11 @@ class TitleScreen extends StatelessWidget {
             ElevatedButton(
               onPressed:  () async {
                 // create units page
-                const id = "test";
+                var course = CourseGenerator.generate("Biology of Cancer", this.user.username);
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UnitsPage(course: id)),
+                  MaterialPageRoute(builder: (context) => UnitsPage(course: course)),
                 );
               },
               style: ElevatedButton.styleFrom(

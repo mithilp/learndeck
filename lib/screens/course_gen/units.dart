@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sample/utils/models/course.dart';
 
 class UnitsPage extends StatefulWidget {
-  final String course;
+  final Course course;
   const UnitsPage({super.key, required this.course});
 
   @override
