@@ -6,7 +6,7 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text('hi')
+      child: const Text('hi')
     );
   }
 }

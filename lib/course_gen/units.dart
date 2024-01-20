@@ -11,6 +11,6 @@ class UnitsPage extends StatefulWidget {
 class _UnitsPageState extends State<UnitsPage> {
   @override
   Widget build(BuildContext context) {
-    return Text('hello');
+    return const Text('hello');
   }
 }

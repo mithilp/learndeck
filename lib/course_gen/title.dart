@@ -21,7 +21,7 @@ class _TitlePageState extends State<TitlePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height:32),
+                const SizedBox(height:32),
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: IconButton(
@@ -31,7 +31,7 @@ class _TitlePageState extends State<TitlePage> {
                         MaterialPageRoute(builder: (context) => const UnitsPage(course: 'hello')),
                       );
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       size: 40,
                       color: Color(0xff888888),
@@ -44,18 +44,18 @@ class _TitlePageState extends State<TitlePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      SizedBox(
                         width: (2/3)*MediaQuery.of(context).size.width,
                         child: Text(
                             'Generate Your Course',
                             style: GoogleFonts.figtree(
                                 fontSize: 36,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xff00b388)
+                                color: const Color(0xff00b388)
                             )
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.square,
                         color: Color(0xff00b388),
                         size: 80
@@ -63,8 +63,8 @@ class _TitlePageState extends State<TitlePage> {
                     ]
                   ),
                 ),
-                SizedBox(height:100),
-                SizedBox(
+                const SizedBox(height:100),
+                const SizedBox(
                   child: TextField(
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -81,23 +81,23 @@ class _TitlePageState extends State<TitlePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 80),
+                const SizedBox(height: 80),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: ElevatedButton(
                     onPressed: () {
 
                     },
-                    child: Text(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(const Color(0xff00b388)),
+                    ),
+                    child: const Text(
                         'Get Started',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w700
                       )
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xff00b388)),
                     ),
                   ),
                 )

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GeminiAPI {
@@ -47,7 +46,5 @@ class GeminiAPI {
     } else {
       return 'Error 400: Request Failed';
     }
-
-    return 'hello';
   }
 }

@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MongoDB.connect();
 
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: Login(),
   ));
 }

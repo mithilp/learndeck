@@ -1,9 +1,9 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sample/screens/home.dart';
+import 'package:sample/screens/username.dart';
+import 'package:sample/utils/models/user.dart';
 import 'package:sample/utils/mongodb.dart';
 
 class Login extends StatefulWidget {
@@ -32,30 +32,37 @@ class _LoginState extends State<Login> {
           .webAuthentication(scheme: dotenv.env['AUTH0_CUSTOM_SCHEME'])
           .login();
 
-      if (await MongoDB.userStage(credentials.user.email as String) ==
-          "complete") {
+      User user = await MongoDB.getUser(credentials.user.email as String);
+
+      if (user.stage ==
+          'complete') {
         // go to home page
         print('go to home page');
-      } else if (await MongoDB.userStage(credentials.user.email as String) ==
-          "first_time") {
+      } else if (user.stage ==
+          'first_time') {
         print('go to create a course flow');
         // go to create a course flow
-      } else if (await MongoDB.userStage(credentials.user.email as String) ==
-          "no_username") {
+      } else if (user.stage ==
+          'no_username') {
         // go to set up username page
         print('go to username set up page');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UsernameScreen(
+                  user: user,
+                )));
       } else {
         // user is new
         print('user does not exist');
         await MongoDB.addUser(credentials.user.email as String);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UsernameScreen(
+                  user: user,
+                )));
       }
-
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => Home(
-      //               user: credentials.user,
-      //             )));
     } catch (e) {
       print(e);
     }
@@ -68,7 +75,7 @@ class _LoginState extends State<Login> {
           .logout();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Login()));
+            context, MaterialPageRoute(builder: (context) => const Login()));
       });
     } catch (e) {
       print(e);
@@ -83,20 +90,20 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image(
+            const Image(
               image: AssetImage('assets/logo.png'),
               height: 100,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text('Learndeck',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.figtree(
-                  color: Color(0xff008061),
+                  color: const Color(0xff008061),
                   fontSize: 64,
                   height: 0.8,
                   fontWeight: FontWeight.w800,
                 )),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _user != null
                 ? ElevatedButton(
                     onPressed: logout,
@@ -109,9 +116,9 @@ class _LoginState extends State<Login> {
                 : ElevatedButton(
                     onPressed: login,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: (Color(0xff008061)),
+                      backgroundColor: (const Color(0xff008061)),
                       padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                          const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                     ),
                     child: Text('Login',
                         style: GoogleFonts.figtree(
