@@ -46,4 +46,15 @@ class MongoDB {
       print(e);
     }
   }
+
+  static Future<void> addUsername(String email, String username) async {
+    try {
+      await _db?.collection('users').update(
+        where.eq('email', email),
+        modify.set('username', username),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 }
