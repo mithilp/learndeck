@@ -43,7 +43,7 @@ class Home extends StatelessWidget {
             ),
             border: Border.all(
               width: 8,
-              color:
+              color: Color(0xff88888),
             ),
             borderRadius: BorderRadius.circular(12),
           ),
