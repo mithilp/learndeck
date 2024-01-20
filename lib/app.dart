@@ -2,7 +2,7 @@ import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sample/loading.dart';
+import 'package:sample/login.dart';
 
 class App extends StatefulWidget {
   final Auth0? auth0;
@@ -54,7 +54,7 @@ class _AppState extends State<App> {
   @override
   Widget build(final BuildContext context) {
     return MaterialApp(
-        home: Loading(user: _user),
+        home: Login(),
     );
   }
 }

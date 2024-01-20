@@ -2,6 +2,7 @@ import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sample/home.dart';
 
 import 'constants.dart';
 import 'hero.dart';
@@ -33,8 +34,13 @@ class _LoginState extends State<Login> {
           .webAuthentication(scheme: dotenv.env['AUTH0_CUSTOM_SCHEME'])
           .login();
 
-      setState(() {
-        _user = credentials.user;
+      // setState(() {
+      //   _user = credentials.user;
+      // });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
       });
     } catch (e) {
       print(e);
