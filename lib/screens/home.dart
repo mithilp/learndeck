@@ -44,7 +44,7 @@ class Home extends StatelessWidget {
                   Thumbnail(
                     image:
                     'https://images.ctfassets.net/1aemqu6a6t65/5ZPPRFdVSbRyZVX4XyLmHv/db575493321930ff6849c8cdd7dd2472/Chinatown-4-Manhattan-NYC-Photo-Lucia-Vazquez.jpg',
-                    title: 'The History of Chinatown',
+                    title: 'The History of Chinatown flks fsdkjfkl',
                     progress: 5,
                     totalUnits: 12,
                     author: 'mithilp',
