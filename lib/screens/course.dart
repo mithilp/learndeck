@@ -53,7 +53,7 @@ class CourseScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {},
                             child:
-                                Text('${progress > 0 ? 'Resume' : 'Start'} Course',
+                                Text('${progress > 0 ? progress ==totalUnits ? 'Finished': 'Resume' : 'Start'} Course',
                                     style: GoogleFonts.figtree(
                                       fontSize: 18,
                                       color: Colors.white,
