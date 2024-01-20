@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/screens/course_gen/title.dart';
+import 'package:sample/screens/home.dart';
 import 'package:sample/screens/username.dart';
 import 'package:sample/utils/models/user.dart';
 import 'package:sample/utils/mongodb.dart';
@@ -39,6 +40,10 @@ class _LoginState extends State<Login> {
           'complete') {
         // go to home page
         print('go to home page');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Home(user: user)));
       } else if (user.stage ==
           'first_time') {
         print('go to create a course flow');
