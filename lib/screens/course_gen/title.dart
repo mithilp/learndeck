@@ -19,24 +19,7 @@ class TitleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      floatingActionButton: firstTime
-          ? SizedBox()
-          : Padding(
-              padding: const EdgeInsets.only(top: 10.0, right: 10.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Home(user: this.user)),
-                  );
-                },
-                elevation: 0.0,
-                child: Icon(Icons.close, size: 40.0),
-                backgroundColor: Colors.white,
-              ),
-            ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
