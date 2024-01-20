@@ -14,10 +14,12 @@ class _UnitsPageState extends State<UnitsPage> {
   @override
   Widget build(BuildContext context) {
     print(widget.course);
-    return Column(
-      children: [
-        Text('Give some units for'),
-      ]
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Text('Give some units for'),
+        ]
+      ),
     );
   }
 }
