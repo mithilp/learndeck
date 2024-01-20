@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sample/components/thumbnail.dart';
 import 'package:sample/utils/models/user.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sample/components/navbar.dart';
 
 class Home extends StatelessWidget {
   final User user;
@@ -35,7 +36,7 @@ class Home extends StatelessWidget {
                   ),
                   const Image(
                     image: AssetImage('assets/logo.png'),
-                    height: 80,
+                    height: 40,
                   ),
                 ],
               ),
@@ -72,6 +73,7 @@ class Home extends StatelessWidget {
 
             ])),
       ),
-    ));
+    ),
+    );
   }
 }

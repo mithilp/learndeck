@@ -2,6 +2,7 @@ import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sample/components/navbar.dart';
 import 'package:sample/screens/course_gen/title.dart';
 import 'package:sample/screens/home.dart';
 import 'package:sample/screens/username.dart';
@@ -43,7 +44,7 @@ class _LoginState extends State<Login> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Home(user: user)));
+                builder: (context) => NavBar(user: user, index: 0)));
       } else if (user.stage ==
           'first_time') {
         print('go to create a course flow');

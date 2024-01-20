@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sample/components/navbar.dart';
 import 'package:sample/screens/course_gen/units.dart';
 import 'package:sample/screens/home.dart';
 import 'package:sample/utils/course_generator.dart';
@@ -111,7 +112,7 @@ class TitleScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Home(user: this.user)));
+                              builder: (context) => NavBar(user: this.user, index: 0)));
                     },
                     child: Text(
                         "I'll create my own course later, just looking around!"))

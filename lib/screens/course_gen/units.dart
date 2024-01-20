@@ -18,6 +18,9 @@ class _UnitsPageState extends State<UnitsPage> {
       child: Column(
         children: [
           Text('Give some units for'),
+          Icon(
+            Icons.home
+          )
         ]
       ),
     );
