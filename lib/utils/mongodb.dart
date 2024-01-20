@@ -18,7 +18,7 @@ class MongoDB {
     await _db?.open();
   }
 
-  static Future<String> userStage(Map user) async {
+  static String userStage(Map user)  {
     return user['username'] != ''
             ? user['completed']
                 ? 'complete'
@@ -31,7 +31,7 @@ class MongoDB {
     var val = await _db
         ?.collection('users')
         .findOne(where.eq('email', email).fields(['email', 'username', 'completed']));
-    return User(email: val['email'], username: val['username'], completed: val['completed'], stage: val != '' ?  await userStage(val): 'new_user');
+    return User(email: val['email'], username: val['username'], completed: val['completed'], stage: val != '' ?  userStage(val): 'new_user');
   }
 
   static Future<void> addUser(String email) async {
@@ -42,6 +42,17 @@ class MongoDB {
         'username': '',
         'completed': false,
       });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<void> addUsername(String email, String username) async {
+    try {
+      await _db?.collection('users').update(
+        where.eq('email', email),
+        modify.set('username', username),
+      );
     } catch (e) {
       print(e);
     }
