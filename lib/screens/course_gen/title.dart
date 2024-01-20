@@ -5,8 +5,10 @@ import 'package:sample/utils/course_generator.dart';
 import 'package:sample/utils/models/user.dart';
 
 class TitleScreen extends StatelessWidget {
-  User user;
-  TitleScreen({super.key, required User user, required bool firstTime, required this.user});
+
+  final User user;
+
+  TitleScreen({super.key, required User user, required bool firstTime});
 
 
 
