@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sample/login.dart';
+import 'package:sample/screens/login.dart';
 import 'package:sample/utils/mongodb.dart';
 
 void main() async {
