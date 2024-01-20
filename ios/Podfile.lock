@@ -39,9 +39,9 @@ SPEC CHECKSUMS:
   auth0_flutter: ae5ebf94520af57ebce16af395820b9e07abbc9f
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   JWTDecode: 3eaab1e06b6f4dcbdd6716aff09ba4c2104ca8b7
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   SimpleKeychain: f8707c8e97b38c6a6e687b17732afc9bcef06439
 
 PODFILE CHECKSUM: 42335a455e30d70d02084d2eec421e0fa8db9052
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.12.1
