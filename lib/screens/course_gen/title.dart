@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/screens/course_gen/units.dart';
 import 'package:sample/screens/home.dart';
 import 'package:sample/utils/course_generator.dart';
+import 'package:sample/utils/models/course.dart';
 import 'package:sample/utils/models/user.dart';
+import 'package:sample/utils/mongodb.dart';
 
 class TitleScreen extends StatelessWidget {
   final User user;
@@ -76,10 +78,10 @@ class TitleScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
+                MongoDB.addCompleted(this.user.email);
                 // create units page
                 var course = CourseGenerator.generate(
-                    "Biology of Cancer", this.user.username);
-
+                    _textController.text, this.user.username);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -105,6 +107,7 @@ class TitleScreen extends StatelessWidget {
             firstTime
                 ? TextButton(
                     onPressed: () {
+                      MongoDB.addCompleted(this.user.email);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

@@ -18,20 +18,28 @@ class MongoDB {
     await _db?.open();
   }
 
-  static String userStage(Map user)  {
+  static String userStage(Map user) {
     return user['username'] != ''
-            ? user['completed']
-                ? 'complete'
-                : 'first_time'
-            : 'no_username';
-
+        ? user['completed']
+            ? 'complete'
+            : 'first_time'
+        : 'no_username';
   }
 
   static Future<User> getUser(String email) async {
-    var val = await _db
-        ?.collection('users')
-        .findOne(where.eq('email', email).fields(['email', 'username', 'completed']));
-    return User(email: val['email'], username: val['username'], completed: val['completed'], stage: val != '' ?  userStage(val): 'new_user');
+    var val = await _db?.collection('users').findOne(
+        where.eq('email', email).fields(['email', 'username', 'completed']));
+    return val != null
+        ? User(
+            email: email,
+            username: val['username'],
+            completed: val['completed'],
+            stage: userStage(val))
+        : User(
+            email: email,
+            username:  "",
+            completed:  false,
+            stage:  'new_user');
   }
 
   static Future<void> addUser(String email) async {
@@ -50,9 +58,9 @@ class MongoDB {
   static Future<void> addUsername(String email, String username) async {
     try {
       await _db?.collection('users').update(
-        where.eq('email', email),
-        modify.set('username', username),
-      );
+            where.eq('email', email),
+            modify.set('username', username),
+          );
     } catch (e) {
       print(e);
     }
@@ -61,9 +69,9 @@ class MongoDB {
   static Future<void> addCompleted(String email) async {
     try {
       await _db?.collection('users').update(
-        where.eq('email', email),
-        modify.set('completed', true),
-      );
+            where.eq('email', email),
+            modify.set('completed', true),
+          );
     } catch (e) {
       print(e);
     }
