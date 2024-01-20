@@ -46,6 +46,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+/ios/Podfile.lock
+
 .env
 android/app/src/main/res/values/strings.xml
 <?xml version="1.0" encoding="utf-8"?>
