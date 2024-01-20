@@ -2,6 +2,7 @@ import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/home.dart';
 
 import 'constants.dart';
@@ -34,14 +35,13 @@ class _LoginState extends State<Login> {
           .webAuthentication(scheme: dotenv.env['AUTH0_CUSTOM_SCHEME'])
           .login();
 
-      // setState(() {
-      //   _user = credentials.user;
-      // });
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
-      });
+            context,
+            MaterialPageRoute(
+                builder: (context) => Home(
+                      user: credentials.user,
+                    )));
+
     } catch (e) {
       print(e);
     }
@@ -52,8 +52,11 @@ class _LoginState extends State<Login> {
       await auth0
           .webAuthentication(scheme: dotenv.env['AUTH0_CUSTOM_SCHEME'])
           .logout();
-      setState(() {
-        _user = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Login()));
       });
     } catch (e) {
       print(e);
@@ -70,31 +73,47 @@ class _LoginState extends State<Login> {
         left: padding / 2,
         right: padding / 2,
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        Expanded(
-            child: Row(children: [
-          _user != null
-              ? Expanded(child: UserWidget(user: _user))
-              : const Expanded(child: HeroWidget())
-        ])),
-        _user != null
-            ? ElevatedButton(
-                onPressed: logout,
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
-                ),
-                child: const Text('Logout'),
-              )
-            : ElevatedButton(
-                onPressed: login,
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
-                ),
-                child: const Text('Login'),
-              )
-      ]),
+      child: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image(image: AssetImage('assets/logo.png'), height: 100,),
+              SizedBox(height: 10),
+              Text('Learndeck',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.figtree(
+                    color: Color(0xff008061),
+                    fontSize: 64,
+                    height: 0.8,
+                    fontWeight: FontWeight.w800,
+                  )),
+              SizedBox(height: 20),
+              _user != null
+                  ? ElevatedButton(
+                      onPressed: logout,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black),
+                      ),
+                      child: const Text('Logout'),
+                    )
+                  : ElevatedButton(
+                      onPressed: login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: (Color(0xff008061)),
+                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      ),
+                      child: Text('Login',
+                          style: GoogleFonts.figtree(
+                            fontSize: 24,
+                            color: Colors.white,
+                            height: 0.8,
+                            fontWeight: FontWeight.w800,
+                          )),
+                    )
+            ]),
+      ),
     ));
   }
 }

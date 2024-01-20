@@ -14,10 +14,6 @@ class HeroWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Container(
-        margin: const EdgeInsets.only(bottom: margin),
-        child: Image.asset('images/logo.png', width: 24),
-      ),
       Expanded(
           child: Container(
               margin: const EdgeInsets.all(margin),
@@ -26,18 +22,20 @@ class HeroWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Flutter',
-                        style: GoogleFonts.spaceGrotesk(
+                        style: GoogleFonts.figtree(
                           foreground: Paint()..shader = linearGradient,
                           fontSize: 80,
                           height: 0.8,
                           fontWeight: FontWeight.w800,
                         )),
                     Text('Sample App',
-                        style: GoogleFonts.spaceGrotesk(
+                        style: GoogleFonts.figtree(
                           fontSize: 80,
                           height: 0.8,
                           fontWeight: FontWeight.w600,
+
                         )),
+
                   ])))
     ]);
   }
