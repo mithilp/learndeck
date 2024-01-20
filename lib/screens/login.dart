@@ -2,6 +2,7 @@ import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sample/screens/course_gen/title.dart';
 import 'package:sample/screens/username.dart';
 import 'package:sample/utils/models/user.dart';
 import 'package:sample/utils/mongodb.dart';
@@ -41,6 +42,13 @@ class _LoginState extends State<Login> {
       } else if (user.stage ==
           'first_time') {
         print('go to create a course flow');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TitleScreen(
+                  user: user,
+                  firstTime: true,
+                )));
         // go to create a course flow
       } else if (user.stage ==
           'no_username') {
@@ -92,7 +100,7 @@ class _LoginState extends State<Login> {
           children: [
             const Image(
               image: AssetImage('assets/logo.png'),
-              height: 100,
+              height: 125,
             ),
             const SizedBox(height: 10),
             Text('Learndeck',

@@ -5,8 +5,9 @@ import 'package:sample/utils/models/user.dart';
 import 'package:sample/utils/mongodb.dart';
 
 class UsernameScreen extends StatefulWidget {
-  final User user;
+
   const UsernameScreen({super.key, required User this.user});
+  final User user;
 
   @override
   State<UsernameScreen> createState() => _UsernameScreenState();
@@ -16,8 +17,13 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
 TextEditingController _usernameController = TextEditingController();
 
+
+
   @override
   Widget build(BuildContext context) {
+
+    var title_page = TitleScreen(user: widget.user, firstTime: true,);
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -30,20 +36,14 @@ TextEditingController _usernameController = TextEditingController();
                 color: Colors.black,
               ),
             ),
-            Text("What's your username?",
-              style: GoogleFonts.figtree(
-                fontSize: 24,
-                color: Colors.black,
-              ),
-            ),
             SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
-                  labelText: 'Be Creative!',
-                  hintText: 'CrazyTiger123',
+                  labelText: "What's your username?",
+                  hintText: 'Be creative!',
                   labelStyle: GoogleFonts.figtree(
                     fontSize: 24.0,
                     color: Colors.black,
@@ -65,7 +65,7 @@ TextEditingController _usernameController = TextEditingController();
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const TitlePage()),
+                  MaterialPageRoute(builder: (context) => title_page),
                 );
               },
               style: ElevatedButton.styleFrom(
