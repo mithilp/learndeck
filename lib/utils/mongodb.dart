@@ -252,4 +252,35 @@ class MongoDB {
       }
     }
   }
+
+  static Future<List<Course>> getStarred(String username) async {
+    print("entered");
+    var values = await _db?.collection('courses').find(
+        where.eq('${username}_library', true).fields(['title', 'author', 'units','image','${username}_library','${username}_progress']));
+    List<Course> courses = [];
+    values = await values.toList();
+    print(values[0]);
+
+    if(values == null) {
+      courses = [Course(id: "", title: '', author: '', units: [], image: '', added: false, progress: 0)];
+    } else {
+      print("searching for courses in library");
+      for (var val in values) {
+        print("found course");
+        courses.add(Course(
+            id: (val['_id'] as ObjectId).oid,
+            title: val['title'],
+            author: val['author'],
+            unitIds:
+            (val['units'] as List).map((item) => item as String).toList(),
+            image: val['image'],
+            added: val['${username}_library'],
+            progress: val['${username}_progress'])
+        );
+        print(courses);
+      };
+    }
+
+    return courses;
+  }
 }

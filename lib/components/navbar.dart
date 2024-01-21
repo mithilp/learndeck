@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sample/screens/course_gen/title.dart';
 import 'package:sample/screens/home.dart';
+import 'package:sample/screens/library.dart';
 import 'package:sample/utils/models/user.dart';
 
 class NavBar extends StatefulWidget {
@@ -18,7 +19,7 @@ class _NavBarState extends State<NavBar> {
     Home(user: widget.user),
     Home(user: widget.user),
     TitleScreen(user: widget.user, firstTime: false),
-    Home(user: widget.user),
+    LibraryPage(user: widget.user),
     Home(user: widget.user)
   ];
 
