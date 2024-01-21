@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,6 +12,12 @@ import 'package:url_launcher/url_launcher.dart';
     }
 
     class _ScheduleState extends State<Schedule> {
+      int weeks = 0;
+      bool submitState = false;
+      bool stateOne = false;
+      bool stateTwo = false;
+      bool stateFour = false;
+      int minutes = 56;
       @override
       Widget build(BuildContext context) {
         return Scaffold(
@@ -41,7 +49,7 @@ import 'package:url_launcher/url_launcher.dart';
                             ],
                           ),
                           SizedBox(height: 20),
-                          Text('You have 568 minutes of learning.',
+                          Text('You have $minutes minutes of learning.',
                               style: GoogleFonts.figtree(
                                 fontSize: 32,
                                 color: Colors.black,
@@ -52,16 +60,21 @@ import 'package:url_launcher/url_launcher.dart';
                           SizedBox(
                             width:393,
                             child: ElevatedButton(
-                              onPressed: null,
+                              onPressed: (){
+                                weeks = 1;
+                                submitState = true;
+                              },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: (const Color(0xff009966)),
+                                backgroundColor: (const Color(0xffffffff)),
+                                elevation: 0.0,
+                                side: BorderSide(color: Color(0xff009966), width: 4.0),
                                 padding:
                                 const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               ),
                               child: Text("1 week",
                                   style: GoogleFonts.figtree(
                                     fontSize: 24,
-                                    color: Colors.white,
+                                    color: Color(0xff009966),
                                     height: 0.8,
                                     fontWeight: FontWeight.w800,
                                   )),
@@ -71,16 +84,21 @@ import 'package:url_launcher/url_launcher.dart';
                           SizedBox(
                             width:393,
                             child: ElevatedButton(
-                              onPressed: null,
+                              onPressed: (){
+                                weeks = 2;
+                                submitState = true;
+                              },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: (const Color(0xff009966)),
+                                backgroundColor: (const Color(0xffffffff)),
+                                elevation: 0.0,
+                                side: BorderSide(color: Color(0xff009966), width: 4.0),
                                 padding:
                                 const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               ),
                               child: Text("2 weeks",
                                   style: GoogleFonts.figtree(
                                     fontSize: 24,
-                                    color: Colors.white,
+                                    color: Color(0xff009966),
                                     height: 0.8,
                                     fontWeight: FontWeight.w800,
                                   )),
@@ -90,16 +108,21 @@ import 'package:url_launcher/url_launcher.dart';
                           SizedBox(
                             width:393,
                             child: ElevatedButton(
-                              onPressed: null,
+                              onPressed: (){
+                                weeks = 4;
+                                submitState = true;
+                              },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: (const Color(0xff009966)),
+                                backgroundColor: (const Color(0xffffffff)),
+                                elevation: 0.0,
+                                side: BorderSide(color: Color(0xff009966), width: 4.0),
                                 padding:
                                 const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               ),
                               child: Text("4 weeks",
                                   style: GoogleFonts.figtree(
                                     fontSize: 24,
-                                    color: Colors.white,
+                                    color: Color(0xff009966),
                                     height: 0.8,
                                     fontWeight: FontWeight.w800,
                                   )),
@@ -114,23 +137,45 @@ import 'package:url_launcher/url_launcher.dart';
                                   padding: EdgeInsets.only(right: 10.0),
                                   child: ElevatedButton(
                                     onPressed: () async {
+                                      if (submitState){
                                       print('test');
-                                      String eventName = 'Recurring Event';
-                                      String eventDescription = 'Description of recurring event';
-                                      DateTime eventStartDate = DateTime.now().add(Duration(days: 1));
-                                      DateTime eventEndDate = eventStartDate.add(Duration(hours: 2));
+                                      int i = 1;
+                                      double per = minutes.toDouble();
+                                      while (i<=5 && per >15){
+                                        per = minutes/(i*weeks);
+                                        i++;
+                                      }
+                                      double higher = ((minutes/((i+1)*weeks))-15).abs();
+                                      double lower = ((minutes/(i*weeks))-15).abs();
+                                      if (min(lower, higher) == lower) {
+                                        i = i;
+                                      }
+                                      else {
+                                        i++;
+                                      }
+                                      int timesaWeek = i;
+                                      double minutesEach = minutes/(i*weeks);
+                                      int calMinutes = minutesEach.ceil();
+                                      print (timesaWeek);
+                                      print(minutesEach);
+                                      String eventName = 'The History of China ($calMinutes minutes)';
+                                      String eventDescription = 'Open the Learndeck App and start learning!';
+                                      DateTime eventStartDate = DateTime.now();
+                                      DateTime eventEndDate = eventStartDate.add(Duration(minutes: (minutesEach.toInt())));
                                       String formattedStartDate = eventStartDate.toUtc().toIso8601String();
                                       String formattedEndDate = eventEndDate.toUtc().toIso8601String();
-                                      String recurrenceRule = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE';
+                                      String recurrenceRule = 'recur=RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;INTERVAL=1';
                                       String googleCalendarUrl =
                                           'https://www.google.com/calendar/render?action=TEMPLATE&text=$eventName&dates=$formattedStartDate/$formattedEndDate&details=$eventDescription&$recurrenceRule';
                                       print(Uri.parse(googleCalendarUrl));
-                                      if (!await launchUrl(Uri.parse(googleCalendarUrl))) {
+                                      if (!await launchUrl(Uri.parse(googleCalendarUrl, ), mode: LaunchMode.externalApplication)) {
                                       throw Exception('Could not launch url');
                                       }
-
-
-                                    },
+                                    }
+                                      else {
+                                        null;
+                                      }
+      },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: (const Color(0xff009966)),
                                       padding:
