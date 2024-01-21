@@ -3,6 +3,7 @@ import 'dart:math';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'course.dart';
 
     class Schedule extends StatefulWidget {
       const Schedule({super.key});
@@ -17,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
       bool stateOne = false;
       bool stateTwo = false;
       bool stateFour = false;
-      int minutes = 56;
+      int minutes = 321;
       @override
       Widget build(BuildContext context) {
         return Scaffold(
@@ -158,7 +159,7 @@ import 'package:url_launcher/url_launcher.dart';
                                       int calMinutes = minutesEach.ceil();
                                       print (timesaWeek);
                                       print(minutesEach);
-                                      String eventName = 'The History of China ($calMinutes minutes)';
+                                      String eventName = 'The History of China ($calMinutes minutes)($timesaWeek times/week)';
                                       String eventDescription = 'Open the Learndeck App and start learning!';
                                       DateTime eventStartDate = DateTime.now();
                                       DateTime eventEndDate = eventStartDate.add(Duration(minutes: (minutesEach.toInt())));
@@ -195,7 +196,8 @@ import 'package:url_launcher/url_launcher.dart';
                                   width: 145,
                                   padding: const EdgeInsets.only(left: 10.0),
                                   child: ElevatedButton(
-                                    onPressed: null,
+                                    onPressed: (){
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: (const Color(0xff009966)),
                                       padding:

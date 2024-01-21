@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/screens/chapter.dart';
+import 'package:sample/screens/schedule.dart';
 import 'package:sample/utils/models/course.dart';
 import 'package:sample/utils/mongodb.dart';
 
@@ -42,9 +43,27 @@ class CourseScreen extends StatelessWidget {
                     Container(
                         constraints:
                             const BoxConstraints(minWidth: 100, maxWidth: 450),
-                        child: Text(course.title,
-                            style: GoogleFonts.figtree(
-                                fontSize: 30, fontWeight: FontWeight.w800))),
+                        child: Row(
+                          children: [
+                            Text(course.title,
+                                style: GoogleFonts.figtree(
+                                    fontSize: 30, fontWeight: FontWeight.w800)),
+                            Container(
+                              padding: EdgeInsets.only(left: 45.0),
+                              child: IconButton(
+                                  onPressed: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => Schedule()),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.calendar_today),
+                              iconSize: 36,
+                              color: Color(0xff009966),
+                              ),
+                            )
+                          ],
+                        )),
                     Row(
                       children: [
                         Expanded(
