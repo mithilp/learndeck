@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/components/navbar.dart';
 import 'package:sample/screens/course_gen/units.dart';
-import 'package:sample/screens/home.dart';
 import 'package:sample/utils/course_generator.dart';
-import 'package:sample/utils/models/course.dart';
 import 'package:sample/utils/models/user.dart';
 import 'package:sample/utils/mongodb.dart';
 
@@ -14,14 +12,14 @@ class TitleScreen extends StatelessWidget {
 
   TitleScreen({super.key, required this.user, required this.firstTime});
 
-  TextEditingController _textController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: firstTime
-          ? SizedBox()
+          ? const SizedBox()
           : Padding(
               padding: const EdgeInsets.only(top: 10.0, right: 10.0),
               child: FloatingActionButton(
@@ -33,8 +31,8 @@ class TitleScreen extends StatelessWidget {
                   );
                 },
                 elevation: 0.0,
-                child: Icon(Icons.close, size: 40.0),
                 backgroundColor: Colors.white,
+                child: const Icon(Icons.close, size: 40.0),
               ),
             ),
       body: Center(
@@ -42,14 +40,14 @@ class TitleScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "What we learning?",
+              'What we learning?',
               style: GoogleFonts.figtree(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -70,23 +68,23 @@ class TitleScreen extends StatelessWidget {
                           100.0), // Adjust the radius as needed
                     ),
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 28.0, vertical: 16.0),
+                        const EdgeInsets.symmetric(horizontal: 28.0, vertical: 16.0),
                   ),
                   style: GoogleFonts.figtree(fontSize: 20.0),
                 )),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(
               onPressed: () async {
-                MongoDB.addCompleted(this.user.email);
+                MongoDB.addCompleted(user.email);
                 // create units page
                 var course = CourseGenerator.generate(
-                    _textController.text, this.user.username);
+                    _textController.text, user.username);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => UnitsPage(course: course)),
+                      builder: (context) => UnitsPage(course: course, user: user)),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -102,21 +100,21 @@ class TitleScreen extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             firstTime
                 ? TextButton(
                     onPressed: () {
-                      MongoDB.addCompleted(this.user.email);
+                      MongoDB.addCompleted(user.email);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => NavBar(user: this.user, index: 0)));
+                              builder: (context) => NavBar(user: user, index: 0)));
                     },
-                    child: Text(
+                    child: const Text(
                         "I'll create my own course later, just looking around!"))
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),

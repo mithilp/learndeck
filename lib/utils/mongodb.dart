@@ -39,7 +39,7 @@ class MongoDB {
             username: val['username'],
             completed: val['completed'],
             stage: userStage(val))
-        : User(email: email, username: "", completed: false, stage: 'new_user');
+        : User(email: email, username: '', completed: false, stage: 'new_user');
   }
 
   static Future<void> addUser(String email) async {
@@ -171,15 +171,15 @@ class MongoDB {
       return val != null
           ? Course(
               id: (val['_id'] as ObjectId).oid,
-              title: val["title"],
-              author: val["author"],
+              title: val['title'],
+              author: val['author'],
               unitIds:
                   (val['units'] as List).map((item) => item as String).toList(),
               image: val['image'],
               added: val['${username}_library'],
               progress: val['${username}_progress'])
           : Course(
-              id: "",
+              id: '',
               title: '',
               author: '',
               units: [],
@@ -189,7 +189,7 @@ class MongoDB {
     } catch (e) {
       print(e);
       return Course(
-          id: "",
+          id: '',
           title: '',
           author: '',
           units: [],

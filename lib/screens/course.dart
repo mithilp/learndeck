@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/screens/chapter.dart';
 import 'package:sample/utils/models/course.dart';
-import 'package:sample/utils/models/question.dart';
 import 'package:sample/utils/mongodb.dart';
 
 class CourseScreen extends StatelessWidget {
@@ -32,7 +31,7 @@ class CourseScreen extends StatelessWidget {
                 ),
                 height: 250,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
@@ -40,7 +39,7 @@ class CourseScreen extends StatelessWidget {
                   children: [
                     Container(
                         constraints:
-                            BoxConstraints(minWidth: 100, maxWidth: 450),
+                            const BoxConstraints(minWidth: 100, maxWidth: 450),
                         child: Text(course.title,
                             style: GoogleFonts.figtree(
                                 fontSize: 30, fontWeight: FontWeight.w800))),
@@ -49,6 +48,11 @@ class CourseScreen extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xff009966),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
                             child: Text(
                                 '${course.progress > 0 ? course.progress == course.unitIds?.length ? 'Finished' : 'Resume' : 'Start'} Course',
                                 style: GoogleFonts.figtree(
@@ -57,11 +61,6 @@ class CourseScreen extends StatelessWidget {
                                   height: 1.15,
                                   fontWeight: FontWeight.w800,
                                 )),
-                            style: ElevatedButton.styleFrom(
-                              primary: Color(0xff009966),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                            ),
                           ),
                         ),
                       ],
@@ -71,6 +70,11 @@ class CourseScreen extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xff009966),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
                             child: Text(
                                 'Add${course.added ? 'ed' : ''} to Library',
                                 style: GoogleFonts.figtree(
@@ -79,16 +83,11 @@ class CourseScreen extends StatelessWidget {
                                   height: 1.15,
                                   fontWeight: FontWeight.w800,
                                 )),
-                            style: ElevatedButton.styleFrom(
-                              primary: Color(0xff009966),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                            ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         CircleAvatar(
@@ -101,7 +100,7 @@ class CourseScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -123,10 +122,10 @@ class CourseScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ListView.builder(
                       padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: course.units?.length,
                         itemBuilder: (context, i) {
@@ -143,7 +142,7 @@ class CourseScreen extends StatelessWidget {
                                     )),
                                 ListView.builder(
                                     padding: EdgeInsets.zero,
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: course.units?.length,
                                     itemBuilder: (context, j) {

@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,7 +40,7 @@ import 'package:url_launcher/url_launcher.dart';
                               ),
                             ],
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Text('You have 568 minutes of learning.',
                               style: GoogleFonts.figtree(
                                 fontSize: 32,
@@ -48,7 +48,7 @@ import 'package:url_launcher/url_launcher.dart';
                                 height: 1.15,
                                 fontWeight: FontWeight.w800,
                               )),
-                          SizedBox(height: 80),
+                          const SizedBox(height: 80),
                           SizedBox(
                             width:393,
                             child: ElevatedButton(
@@ -58,7 +58,7 @@ import 'package:url_launcher/url_launcher.dart';
                                 padding:
                                 const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               ),
-                              child: Text("1 week",
+                              child: Text('1 week',
                                   style: GoogleFonts.figtree(
                                     fontSize: 24,
                                     color: Colors.white,
@@ -67,7 +67,7 @@ import 'package:url_launcher/url_launcher.dart';
                                   )),
                             ),
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           SizedBox(
                             width:393,
                             child: ElevatedButton(
@@ -77,7 +77,7 @@ import 'package:url_launcher/url_launcher.dart';
                                 padding:
                                 const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               ),
-                              child: Text("2 weeks",
+                              child: Text('2 weeks',
                                   style: GoogleFonts.figtree(
                                     fontSize: 24,
                                     color: Colors.white,
@@ -86,7 +86,7 @@ import 'package:url_launcher/url_launcher.dart';
                                   )),
                             ),
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           SizedBox(
                             width:393,
                             child: ElevatedButton(
@@ -96,7 +96,7 @@ import 'package:url_launcher/url_launcher.dart';
                                 padding:
                                 const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               ),
-                              child: Text("4 weeks",
+                              child: Text('4 weeks',
                                   style: GoogleFonts.figtree(
                                     fontSize: 24,
                                     color: Colors.white,
@@ -105,20 +105,20 @@ import 'package:url_launcher/url_launcher.dart';
                                   )),
                             ),
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           Row(
 
                               children: [
                                 Container(
                                   width:185,
-                                  padding: EdgeInsets.only(right: 10.0),
+                                  padding: const EdgeInsets.only(right: 10.0),
                                   child: ElevatedButton(
                                     onPressed: () async {
                                       print('test');
                                       String eventName = 'Recurring Event';
                                       String eventDescription = 'Description of recurring event';
-                                      DateTime eventStartDate = DateTime.now().add(Duration(days: 1));
-                                      DateTime eventEndDate = eventStartDate.add(Duration(hours: 2));
+                                      DateTime eventStartDate = DateTime.now().add(const Duration(days: 1));
+                                      DateTime eventEndDate = eventStartDate.add(const Duration(hours: 2));
                                       String formattedStartDate = eventStartDate.toUtc().toIso8601String();
                                       String formattedEndDate = eventEndDate.toUtc().toIso8601String();
                                       String recurrenceRule = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE';
@@ -136,7 +136,7 @@ import 'package:url_launcher/url_launcher.dart';
                                       padding:
                                       const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                                     ),
-                                    child: Text("Keep Me On Track!",
+                                    child: Text('Keep Me On Track!',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.figtree(
                                           fontSize: 26,
@@ -148,7 +148,7 @@ import 'package:url_launcher/url_launcher.dart';
                                 ),
                                 Container(
                                   width: 145,
-                                  padding: EdgeInsets.only(left: 10.0),
+                                  padding: const EdgeInsets.only(left: 10.0),
                                   child: ElevatedButton(
                                     onPressed: null,
                                     style: ElevatedButton.styleFrom(
@@ -159,14 +159,14 @@ import 'package:url_launcher/url_launcher.dart';
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text("Skip",
+                                        Text('Skip',
                                             style: GoogleFonts.figtree(
                                               fontSize: 26,
                                               color: Colors.white,
                                               height: 0.8,
                                               fontWeight: FontWeight.w800,
                                             )),
-                                        Icon(Icons.arrow_forward_ios_rounded,
+                                        const Icon(Icons.arrow_forward_ios_rounded,
                                         color: Colors.white,)
                                       ],
                                     ),

@@ -47,4 +47,46 @@ class GeminiAPI {
       return 'Error 400: Request Failed';
     }
   }
+
+  static Future<Map<String, dynamic>> getGeminiDataAndPassData(message , data) async{
+    print('entered method');
+    var header = {
+      'Content-Type': 'application/json',
+    };
+    print('got header');
+    final Map<String, dynamic> requestBody = {
+      'contents': [
+        {
+          'parts': [
+            {
+              'text': message
+            }
+          ]
+        }
+      ],
+      'generationConfig': {
+        'temperature': 0.8,
+        'topK': 1,
+        'topP': 1,
+        'maxOutputTokens': 2048,
+        'stopSequences': []
+      }
+    };
+    print('sending request');
+    var response = await http.post(
+      Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${dotenv.env['GEMINI_API']}'),
+      headers: header,
+      body: jsonEncode(requestBody),
+    );
+    if (response.statusCode == 200){
+      var jsonResponse = jsonDecode(response.body);
+      return {
+        'response': jsonResponse['candidates'][0]['content']['parts'][0]['text'].toString(),
+        'data': data
+      };
+    } else {
+      throw Exception('Error 400: Request Failed');
+    }
+  }
+
 }

@@ -33,7 +33,7 @@ class Thumbnail extends StatelessWidget {
             ),
             border: Border.all(
               width: 8,
-              color: Color(0xff009966),
+              color: const Color(0xff009966),
             ),
             borderRadius: BorderRadius.circular(25),
           ),
@@ -45,7 +45,7 @@ class Thumbnail extends StatelessWidget {
               color: Colors.white,
               border: Border.all(
                 width: 8,
-                color: Color(0xff009966),
+                color: const Color(0xff009966),
               ),
               borderRadius: BorderRadius.circular(25),
               gradient: LinearGradient(
@@ -67,7 +67,7 @@ class Thumbnail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                constraints: BoxConstraints(minWidth: 100, maxWidth: 300),
+                constraints: const BoxConstraints(minWidth: 100, maxWidth: 300),
                 child: Text(course.title,
                     overflow: TextOverflow.fade,
                     style: GoogleFonts.figtree(
@@ -77,9 +77,9 @@ class Thumbnail extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     )),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
-                  "${course.progress}/${course.unitIds?.length} units • @${course.author}",
+                  '${course.progress}/${course.unitIds?.length} units • @${course.author}',
                   style: GoogleFonts.figtree(
                     fontSize: 18,
                     color: Colors.white,
@@ -94,6 +94,11 @@ class Thumbnail extends StatelessWidget {
           right: 20,
           child: ElevatedButton(
             onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff009966),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
             child: Text('Add${course.added ? 'ed' : ''} to Library',
                 style: GoogleFonts.figtree(
                   fontSize: 18,
@@ -101,11 +106,6 @@ class Thumbnail extends StatelessWidget {
                   height: 1.15,
                   fontWeight: FontWeight.w800,
                 )),
-            style: ElevatedButton.styleFrom(
-              primary: Color(0xff009966),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
           ),
         ),
       ]),

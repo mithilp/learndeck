@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
       future: MongoDB.getFeatured(user.username),
       builder: (BuildContext context, AsyncSnapshot<Course> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: Color(0xff009966),
             ),
@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Text("Today's featured",
                             style: GoogleFonts.figtree(
                               fontSize: 34,
@@ -63,12 +63,12 @@ class Home extends StatelessWidget {
                               height: 1.15,
                               fontWeight: FontWeight.w800,
                             )),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Thumbnail(
                           course: data,
                           large: true,
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Text('Your recent courses',
                             style: GoogleFonts.figtree(
                               fontSize: 34,
@@ -76,7 +76,7 @@ class Home extends StatelessWidget {
                               height: 1.15,
                               fontWeight: FontWeight.w800,
                             )),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Thumbnail(
                         //   image:
                         //   'https://media.self.com/photos/5b6b0b0cbb7f036f7f5cbcfa/master/pass/apples.jpg',

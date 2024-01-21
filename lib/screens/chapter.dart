@@ -9,7 +9,7 @@ class ChapterScreen extends StatelessWidget {
   final Chapter chapterData;
   final int unit;
   final int chapter;
-  ChapterScreen({
+  const ChapterScreen({
     super.key,
     required this.chapterData,
     required this.unit,
@@ -18,9 +18,9 @@ class ChapterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    YoutubePlayerController _controller = YoutubePlayerController(
+    YoutubePlayerController controller = YoutubePlayerController(
       initialVideoId: chapterData.video,
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
@@ -37,7 +37,7 @@ class ChapterScreen extends StatelessWidget {
           color: Colors.white,
           fontWeight: FontWeight.w800,
         ) ),
-        icon: Icon(Icons.chat, color: Colors.white,),
+        icon: const Icon(Icons.chat, color: Colors.white,),
         backgroundColor: const Color(0xff009966),
       ),
       body: SafeArea(
@@ -52,7 +52,7 @@ class ChapterScreen extends StatelessWidget {
                     children: [
                       Container(
                           constraints:
-                              BoxConstraints(minWidth: 100, maxWidth: 450),
+                              const BoxConstraints(minWidth: 100, maxWidth: 450),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Column(
@@ -70,22 +70,22 @@ class ChapterScreen extends StatelessWidget {
                               ],
                             ),
                           )),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
                         child: YoutubePlayer(
-                          controller: _controller,
+                          controller: controller,
                           onReady: () {
                             print('Player is ready.');
                           },
                           showVideoProgressIndicator: true,
                           progressIndicatorColor:  const Color(0xff009966),
-                          progressColors: ProgressBarColors(
-                            playedColor:  const Color(0xff009966),
-                            handleColor:  const Color(0xff096043),
+                          progressColors: const ProgressBarColors(
+                            playedColor:  Color(0xff009966),
+                            handleColor:  Color(0xff096043),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0, ),
                         child: Column(
@@ -104,7 +104,7 @@ class ChapterScreen extends StatelessWidget {
                                 fontSize: 18,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Text(
                               'Ready for a Quiz?',
                               style: GoogleFonts.figtree(
@@ -112,7 +112,7 @@ class ChapterScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             QuizComponent(quiz: chapterData.questions as List<Question>,)
                           ],
                         ),

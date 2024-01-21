@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/components/navbar.dart';
 import 'package:sample/screens/course_gen/title.dart';
-import 'package:sample/screens/home.dart';
 import 'package:sample/screens/username.dart';
 import 'package:sample/utils/models/user.dart';
 import 'package:sample/utils/mongodb.dart';
