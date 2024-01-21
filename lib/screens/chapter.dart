@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/components/quiz.dart';
+import 'package:sample/utils/models/chapter.dart';
 import 'package:sample/utils/models/question.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ChapterScreen extends StatelessWidget {
-  final String title;
-  final String video;
-  final String summary;
-  final List<Question> quiz;
+  final Chapter chapterData;
   final int unit;
   final int chapter;
-  ChapterScreen({
+  const ChapterScreen({
     super.key,
-    required this.title,
-    required this.video,
-    required this.summary,
-    required this.quiz,
+    required this.chapterData,
     required this.unit,
     required this.chapter,
   });
 
   @override
   Widget build(BuildContext context) {
-    YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: video,
-      flags: YoutubePlayerFlags(
+    YoutubePlayerController controller = YoutubePlayerController(
+      initialVideoId: chapterData.video,
+      flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
@@ -42,7 +37,7 @@ class ChapterScreen extends StatelessWidget {
           color: Colors.white,
           fontWeight: FontWeight.w800,
         ) ),
-        icon: Icon(Icons.chat, color: Colors.white,),
+        icon: const Icon(Icons.chat, color: Colors.white,),
         backgroundColor: const Color(0xff009966),
       ),
       body: SafeArea(
@@ -57,7 +52,7 @@ class ChapterScreen extends StatelessWidget {
                     children: [
                       Container(
                           constraints:
-                              BoxConstraints(minWidth: 100, maxWidth: 450),
+                              const BoxConstraints(minWidth: 100, maxWidth: 450),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Column(
@@ -75,22 +70,22 @@ class ChapterScreen extends StatelessWidget {
                               ],
                             ),
                           )),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
                         child: YoutubePlayer(
-                          controller: _controller,
+                          controller: controller,
                           onReady: () {
                             print('Player is ready.');
                           },
                           showVideoProgressIndicator: true,
                           progressIndicatorColor:  const Color(0xff009966),
-                          progressColors: ProgressBarColors(
-                            playedColor:  const Color(0xff009966),
-                            handleColor:  const Color(0xff096043),
+                          progressColors: const ProgressBarColors(
+                            playedColor:  Color(0xff009966),
+                            handleColor:  Color(0xff096043),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0, ),
                         child: Column(
@@ -104,12 +99,12 @@ class ChapterScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                             summary,
+                              chapterData.summary,
                               style: GoogleFonts.figtree(
                                 fontSize: 18,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Text(
                               'Ready for a Quiz?',
                               style: GoogleFonts.figtree(
@@ -117,8 +112,8 @@ class ChapterScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
-                            SizedBox(height: 10),
-                            QuizComponent(quiz: quiz,)
+                            const SizedBox(height: 10),
+                            QuizComponent(quiz: chapterData.questions as List<Question>,)
                           ],
                         ),
                       ),

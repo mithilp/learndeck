@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/utils/models/course.dart';
-import 'package:sample/utils/models/unit.dart';
 
 class UnitField extends StatefulWidget {
   final int i;
@@ -13,7 +12,7 @@ class UnitField extends StatefulWidget {
 }
 
 class _UnitFieldState extends State<UnitField> {
-  TextEditingController _textController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
   List<String> example_units = ['Skin Cancer', 'Breast Cancer', 'Pancreatic Cancer'];
 
   @override
@@ -22,11 +21,11 @@ class _UnitFieldState extends State<UnitField> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width - 100,
             child: TextField(
               onChanged: (text) {
-                widget.course.units[widget.i].title = text;
+                widget.course.units?[widget.i].title = text;
               },
               controller: _textController,
               decoration: InputDecoration(
@@ -34,7 +33,7 @@ class _UnitFieldState extends State<UnitField> {
                 hintText: example_units[widget.i%3],
                 labelStyle: GoogleFonts.figtree(
                   fontSize: 24.0,
-                  color: Color(0xff888888),
+                  color: const Color(0xff888888),
                 ),
                 filled: true,
                 fillColor: Colors.grey[200],
@@ -42,12 +41,12 @@ class _UnitFieldState extends State<UnitField> {
                   borderRadius: BorderRadius.circular(
                       12.0), // Adjust the radius as needed
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 28.0, vertical: 14.0),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14.0),
               ),
               style: GoogleFonts.figtree(fontSize: 20.0),
             ),
           ),
-          SizedBox(width: 6,),
+          const SizedBox(width: 6,),
           Container(
             width: 58,
             height: 58,
@@ -58,9 +57,9 @@ class _UnitFieldState extends State<UnitField> {
             child: Align(
               child: TextButton(
                 onPressed: () {
-                  setState((){widget.course.units.removeAt(widget.i);});
+                  setState((){widget.course.units?.removeAt(widget.i);});
                 },
-                child: Icon(Icons.delete, color: Colors.white, size: 32.0),
+                child: const Icon(Icons.delete, color: Colors.white, size: 32.0),
               ),
             ),
           )

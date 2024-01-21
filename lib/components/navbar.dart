@@ -13,6 +13,7 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   late int index = widget.index;
+
   late final List<Widget> _content = <Widget>[
     Home(user: widget.user),
     Home(user: widget.user),
@@ -21,12 +22,11 @@ class _NavBarState extends State<NavBar> {
     Home(user: widget.user)
   ];
 
-  void _onItemTapped(int index_tmp) {
-    print('index:${index}');
-    print('index_tmp:${index_tmp}');
+  void _onItemTapped(int indexTmp) {
+    print(widget.user.username);
 
     setState(() {
-      index = index_tmp;
+      index = indexTmp;
     });
   }
 
@@ -37,12 +37,12 @@ class _NavBarState extends State<NavBar> {
         child: _content.elementAt(index),
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             border: Border(top: BorderSide(color: Color(0xff888888), width: 1.0))),
         child: BottomNavigationBar(
           showUnselectedLabels: true,
-          backgroundColor: Color(0xfffffff),
-          unselectedItemColor: Color(0xff888888),
+          backgroundColor: const Color(0x0fffffff),
+          unselectedItemColor: const Color(0xff888888),
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -68,8 +68,8 @@ class _NavBarState extends State<NavBar> {
             ),
           ],
           currentIndex: index,
-          selectedItemColor: Color(0xff00b388),
-          selectedIconTheme: IconThemeData(size: 28),
+          selectedItemColor: const Color(0xff00b388),
+          selectedIconTheme: const IconThemeData(size: 28),
           selectedFontSize: 14,
           onTap: _onItemTapped,
         ),

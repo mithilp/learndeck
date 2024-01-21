@@ -1,36 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sample/components/navbar.dart';
+// import 'package:sample/screens/course_gen/new_course.dart';
 import 'package:sample/utils/gemini.dart';
+import 'package:sample/utils/models/chapter.dart';
 import 'package:sample/utils/models/course.dart';
 import 'dart:convert';
 
+import 'package:sample/utils/models/user.dart';
+
 class ChapterGenScreen extends StatefulWidget {
   final Course course;
-  const ChapterGenScreen({super.key, required this.course});
+  final User user;
+  const ChapterGenScreen({super.key, required this.course, required this.user});
   @override
-  State<ChapterGenScreen> createState() => _ChapterGenScreenState(course: course);
+  State<ChapterGenScreen> createState() =>
+      _ChapterGenScreenState(course: course);
 }
 
 class _ChapterGenScreenState extends State<ChapterGenScreen> {
   Course course;
-  bool loading = false;
+  bool loading = true;
+  List loadingStates = [];
   late List body;
+
   _ChapterGenScreenState({required this.course});
+  @override
   void initState() {
     super.initState();
     load().then((result) {
-      print("result: ${result}");
-      body = result;
+      print('result: $result');
+      List newLoadingStates = List.generate(result.length,
+          (index) => List.generate(result[index]['chapters'].length, (j) => 0));
+      setState(() {
+        body = result;
+        loadingStates = newLoadingStates;
+      });
     });
   }
+
   Future<List> load() async {
-    String unitsString = "";
-    for (int i = 0; i < course.units.length; i++) {
-      unitsString += course.units[i].title + ", ";
-    };
-    print(unitsString);
-    String response = await GeminiAPI.getGeminiData("""
-    ${unitsString} 
-    It is your job to create a course about ${course.title}. The user has requested to create chapters for each of the above units. Then, for each chapter, provide a detailed youtube search query that can be used to find an informative educational video for each chapter. Each query should give an educational informative course in youtube. IMPORTANT: Give the response in a JSON array like the example below with the title of each array element corresponding to the unit title and then the chapters for that unit.\n
+    String unitsString = '';
+    for (int i = 0; i < course.units!.length; i++) {
+      unitsString += ('${course.units![i].title}, ');
+    }
+    String response = await GeminiAPI.getGeminiData('''
+    $unitsString 
+    It is your job to create a course about ${course.title}. 
+    The user has requested to create chapters for each of the above units. 
+    Then, for each chapter, provide a detailed youtube search query that can be used to find an informative educational video for each chapter.
+    Each query should give an educational informative course in youtube. 
+    IMPORTANT: Give the response in a JSON array like the example below with the title of each array element corresponding to the unit title and then the chapters for that unit.\n
     [
       {
         "title": "World War II Battles",
@@ -66,137 +86,296 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
           } etc...
         ]
       }
-    ]""");
-    final body = json.decode(response);
-    if(response != null) {
-      setState(() {
-        loading = false;
-      });
+    ]''');
+    final body = await json.decode(response);
+
+    for (int i = 0; i < body.length; i++) {
+      course.units?[i].chapters = [];
+      for (int j = 0; j < body[i]['chapters'].length; j++) {
+        Chapter chapter = Chapter(
+            id: body[i]['chapters'][j]['youtube_search_query']
+                .replaceAll(RegExp(' +'), ' '),
+            title: body[i]['chapters'][j]['chapter_title'],
+            query: body[i]['chapters'][j]['youtube_search_query'],
+            video: '',
+            summary: '');
+        course.units?[i].chapters?.add(chapter);
+      }
     }
+    setState(() {
+      loading = false;
+    });
     return body;
   }
+
+  Future<void> create() async {
+    setState(() {
+      loadingStates = List.generate(body.length,
+          (index) => List.generate(body[index]['chapters'].length, (j) => 1));
+    });
+    var i = 0;
+
+    for (var unit in body) {
+      var j = 0;
+      for (var chapter in unit['chapters']) {
+        GeminiAPI.getGeminiDataAndPassData('''
+        We are creating a course about ${course.title}. 
+        One of the chapters of the course is ${chapter['chapter_title']}. 
+        Create a short description about the topic. 
+        Additionally, create a quiz about the topic.
+        The quiz should be multiple choice with 3-5 questions. 
+        Each multiple choice question should have only one correct answer.
+        IMPORTANT: Give the response in a JSON object like the example below.
+        The "answer" field should be the index of the correct answer in the "choices" array. Remember indeces start at 0.
+        
+        {
+          "title": "Battle of Stalingrad",
+          "summary": "The Battle of Stalingrad, which took place from August 23, 1942, to February 2, 1943, during World War II, was a pivotal conflict between the Soviet Union and Nazi Germany. Stalingrad (now Volgograd) in southwestern Russia was the battleground. The Soviets successfully defended the city, marking a turning point in the war. The brutal urban warfare, harsh winter conditions, and the encirclement of German forces contributed to significant losses on both sides. The Soviet victory at Stalingrad is considered one of the major milestones leading to the eventual defeat of the Axis powers in the Eastern Front.",
+          "quiz": [
+            {
+              "question": "What was the Battle of Stalingrad?",
+              "explanation": "The Battle of Stalingrad was a major battle between the Germans and the Russians. All the other choices are false information.",
+              "choices": ["It was a battle between the Germans and the Russians.", "It was a battle between the Germans and the Americans.","It was a battle between the Germans and the British.", "It was a battle between the Germans and the French."],
+              "answer": 0
+            },
+            {
+              "question": "What was the outcome of the Battle of Stalingrad?",
+              "explanation": "The Germans lost the battle and were forced to retreat. All the other choices are false information.",
+              "choices": ["The Germans won the battle.", "The Russians won the battle.","The battle was a draw.", "The battle was never finished."],
+              "answer": 1
+            },
+            {
+              "question": "What was the significance of the Battle of Stalingrad?",
+              "explanation": "The Battle of Stalingrad was a major turning point in World War II. All the other choices are false information.",
+              "choices": ["It was the first battle of World War II.", "It was the last battle of World War II.","It was the most important battle of World War II.", "It was the least important battle of World War II."],
+              "answer": 2
+            }
+          ]
+        }
+        ''', {'i': i, 'j': j}).then((response) async {
+          var res = await json.decode(response['response']);
+
+          // get yt video
+
+          // save to db
+
+          // update loading state
+          var i = response['data']['i'];
+          var j = response['data']['j'];
+          setState(() {
+            loadingStates[i][j] = 2;
+          });
+        });
+        j++;
+      }
+      i++;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(body);
-    return loading ? Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-      ),
-      child: (
-        Center(
-          
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.white,
-            color: Color(0xff009966),
-          ),
-        )
-      ),
-    ) : (
-      Scaffold(
-        floatingActionButton: ElevatedButton(
-          onPressed: () {},
-          child: Container(
-            child: Text('submit')
+    return loading
+        ? Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: (const Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                color: Color(0xff009966),
+              ),
+            )),
           )
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:18.0),
-                  child: Text(
-                    course.title,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-            
-                      fontSize: 34,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xff000000),
-                    ),
+        : (Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff009966),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100.0),
                   ),
                 ),
-                SizedBox(height: 10),
-                ListView(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-
-                      for (int i = 0; i < body.length; i++) (
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(width: 20,),
-                                Text(
-                                  'UNIT ${i+1}',
-                                  style: TextStyle(
-                                    color: Color(0xff888888),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Spacer()
-                              ],
+                onPressed: (loadingStates.expand((x) => x).toList())
+                            .contains(1) ||
+                        (loadingStates.expand((x) => x).toList()).contains(2) ||
+                        (loadingStates.expand((x) => x).toList()).contains(3)
+                    ? (loadingStates.expand((x) => x).toList()).contains(1) ||
+                            (loadingStates.expand((x) => x).toList())
+                                .contains(3)
+                        ? null
+                        : () {
+                            print("all done");
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => NewCoursePage(course: course, body: body)),
+                            // );
+                          }
+                    : () {
+                        create();
+                      },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Text('Create Course',
+                      style: GoogleFonts.figtree(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      )),
+                )),
+            body: Scaffold(
+              floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+              floatingActionButton: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, right: 10.0),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                NavBar(user: widget.user, index: 0)),
+                      );
+                    },
+                    elevation: 0.0,
+                    backgroundColor: Colors.white,
+                    child: const Icon(Icons.close, size: 40.0),
+                  )),
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 60.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 12),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 18.0),
+                            child: Text(
+                              course.title,
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.figtree(
+                                fontSize: 34,
+                                fontWeight: FontWeight.w800,
+                                color: const Color(0xff000000),
+                              ),
                             ),
-                            Row(
-                              children: [
-                                SizedBox(width: 20,),
-                                Text(
-                                  body[i]['title'],
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w800,
-                                    color: Color(0xff000000),
-                                  ),
-                                ),
-                                Spacer()
-                              ],
-                            ),
-                            SizedBox(height: 10,),
-                            for(int j = 0; j < body[i]['chapters'].length; j++) (
-                              Container(
-                                margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Color(0xfffff),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  border: Border.all(
-                                    color: Color(0xff888888),
-                                    width: 1.5,
-                                  )
-                                ),
-            
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                          ),
+                          const SizedBox(height: 10),
+                          ListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              for (int i = 0; i < body.length; i++)
+                                (Column(
                                   children: [
-                                    Text(
-                                      body[i]['chapters'][j]['chapter_title'],
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-            
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Color(0xff009966),
-                                      ),
+                                    Row(
+                                      children: [
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Text(
+                                          'UNIT ${i + 1}',
+                                          style: GoogleFonts.figtree(
+                                            color: const Color(0xff888888),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const Spacer()
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Text(
+                                          body[i]['title'],
+                                          style: GoogleFonts.figtree(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w800,
+                                            color: const Color(0xff000000),
+                                          ),
+                                        ),
+                                        const Spacer()
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    for (int j = 0;
+                                        j < body[i]['chapters'].length;
+                                        j++)
+                                      (Container(
+                                        margin: const EdgeInsets.fromLTRB(
+                                            20, 0, 20, 10),
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            color: const Color(0x000fffff),
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            border: Border.all(
+                                              color: const Color(0xff888888),
+                                              width: 1.5,
+                                            )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              body[i]['chapters'][j]
+                                                  ['chapter_title'],
+                                              textAlign: TextAlign.left,
+                                              style: GoogleFonts.figtree(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w800,
+                                                color: const Color(0xff009966),
+                                              ),
+                                            ),
+                                            loadingStates[i][j] == 1
+                                                ? const Center(
+                                                    child: SizedBox(
+                                                      height: 20,
+                                                      width: 20,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        color:
+                                                            Color(0xff009966),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : loadingStates[i][j] == 2
+                                                    ? const Icon(
+                                                        Icons.check,
+                                                        color:
+                                                            Color(0xff009966),
+                                                        size: 24,
+                                                      )
+                                                    : loadingStates[i][j] == 3
+                                                        ? const Icon(
+                                                            Icons.cancel,
+                                                            color: Color(
+                                                                0xffff5572),
+                                                            size: 24,
+                                                          )
+                                                        : const SizedBox()
+                                          ],
+                                        ),
+                                      )),
+                                    const SizedBox(
+                                      height: 20,
                                     ),
                                   ],
-                                ),
-                              )
-                            ),
-                            SizedBox(height: 20,),
-                          ],
-                        )
-                      )
-                    ],
+                                ))
+                            ],
+                          ),
+                        ]),
                   ),
-          
-            
-              ]
-            ),
-          ),
-        )
-      )
-    );
+                ),
+              ),
+            )));
   }
 }

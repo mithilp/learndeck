@@ -11,7 +11,7 @@ class QuizComponent extends StatefulWidget {
 }
 
 class _QuizComponentState extends State<QuizComponent> {
-  late List<int> _selected = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+  late final List<int> _selected = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
   // -1 -> unmarked, 0 -> incorrect, 1 -> correct
   late List<int> _correct = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
 
@@ -20,7 +20,7 @@ class _QuizComponentState extends State<QuizComponent> {
     return Column(
       children: [
         ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: widget.quiz.length,
           itemBuilder: (context, index) {
@@ -46,7 +46,7 @@ class _QuizComponentState extends State<QuizComponent> {
                         ),
                       ),
                       ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: widget.quiz[index].choices.length,
                           itemBuilder: (context, j) {
@@ -96,20 +96,25 @@ class _QuizComponentState extends State<QuizComponent> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text("Quiz Results"),
+                    title: const Text('Quiz Results'),
                     content: Text(
-                        "You got ${correct} out of ${widget.quiz.length} correct!"),
+                        'You got $correct out of ${widget.quiz.length} correct!'),
                     actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text("Close"),
+                        child: const Text('Close'),
                       )
                     ],
                   );
                 });
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff009966),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          ),
           child: Text('Submit',
               style: GoogleFonts.figtree(
                 fontSize: 18,
@@ -117,11 +122,6 @@ class _QuizComponentState extends State<QuizComponent> {
                 height: 1.15,
                 fontWeight: FontWeight.w800,
               )),
-          style: ElevatedButton.styleFrom(
-            primary: Color(0xff009966),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          ),
         ),
       ],
     );

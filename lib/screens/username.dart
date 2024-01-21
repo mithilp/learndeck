@@ -6,7 +6,7 @@ import 'package:sample/utils/mongodb.dart';
 
 class UsernameScreen extends StatefulWidget {
 
-  const UsernameScreen({super.key, required User this.user});
+  const UsernameScreen({super.key, required this.user});
   final User user;
 
   @override
@@ -15,28 +15,28 @@ class UsernameScreen extends StatefulWidget {
 
 class _UsernameScreenState extends State<UsernameScreen> {
 
-TextEditingController _usernameController = TextEditingController();
+final TextEditingController _usernameController = TextEditingController();
 
 
 
   @override
   Widget build(BuildContext context) {
 
-    var title_page = TitleScreen(user: widget.user, firstTime: true,);
+    var titlePage = TitleScreen(user: widget.user, firstTime: true,);
 
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("One more thing...",
+            Text('One more thing...',
               style: GoogleFonts.figtree(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: TextField(
@@ -53,19 +53,19 @@ TextEditingController _usernameController = TextEditingController();
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(100.0), // Adjust the radius as needed
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 28.0, vertical: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 16.0),
                 ),
                 style: GoogleFonts.figtree(fontSize: 20.0),
               )
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             ElevatedButton(
               onPressed:  () async {
                 await MongoDB.addUsername(widget.user.email, _usernameController.text);
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => title_page),
+                  MaterialPageRoute(builder: (context) => titlePage),
                 );
               },
               style: ElevatedButton.styleFrom(
