@@ -279,7 +279,7 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
 
     await MongoDB.addCourse(course);
 
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
           builder: (context) => CourseScreen(course: course)),

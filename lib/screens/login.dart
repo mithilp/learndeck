@@ -40,14 +40,14 @@ class _LoginState extends State<Login> {
           'complete') {
         // go to home page
         print('go to home page');
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => NavBar(user: user, index: 0)));
       } else if (user.stage ==
           'first_time') {
         print('go to create a course flow');
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => TitleScreen(
@@ -59,7 +59,7 @@ class _LoginState extends State<Login> {
           'no_username') {
         // go to set up username page
         print('go to username set up page');
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => UsernameScreen(
@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
         // user is new
         print('user does not exist');
         await MongoDB.addUser(credentials.user.email as String);
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => UsernameScreen(
