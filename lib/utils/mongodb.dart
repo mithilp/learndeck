@@ -1,6 +1,8 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:mongo_dart/mongo_dart.dart' as M;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sample/utils/models/course.dart';
+import 'package:sample/utils/models/unit.dart';
 import 'package:sample/utils/models/user.dart';
 
 class MongoDB {
@@ -75,5 +77,14 @@ class MongoDB {
     } catch (e) {
       print(e);
     }
+  }
+
+  static Future<Course> getFeatured(String username) async {
+    var val = await _db?.collection('courses').findOne(
+        where.eq('featured', true).fields(['title', 'author', 'units','image','${username}_library','${username}_progress']));
+
+    return val != null
+        ? Course(id: '${val["_id"]}', title: val["title"], author: val["author"], unitIds: (val['units'] as List).map((item) => item as String).toList(), image: val['image'], added: val['${username}_library'], progress: val['${username}_progress'])
+        : Course(id: "", title: '', author: '', units: [], image: '', added: false, progress: 0);
   }
 }

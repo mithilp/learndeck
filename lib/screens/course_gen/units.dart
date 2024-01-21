@@ -17,7 +17,7 @@ class UnitsPage extends StatefulWidget {
 class _UnitsPageState extends State<UnitsPage> {
   addUnit() {
     setState(() {
-      widget.course.units.add(Unit(id:widget.course.title, title: ""));
+      widget.course.units?.add(Unit(id:widget.course.title, title: ""));
     });
     print(widget.course.units);
   }
@@ -97,7 +97,7 @@ class _UnitsPageState extends State<UnitsPage> {
             child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
-              children: widget.course.units.mapIndexed((i, unit) => UnitField(i: i, course: widget.course)).toList()
+              children: widget.course.units!.mapIndexed((i, unit) => UnitField(i: i, course: widget.course)).toList()
             ),
           ),
         ]

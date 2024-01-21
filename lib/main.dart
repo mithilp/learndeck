@@ -13,6 +13,6 @@ void main() async {
   await MongoDB.connect();
 
   runApp(const MaterialApp(
-    home: Schedule(),
+    home: Login(),
   ));
 }

@@ -24,8 +24,8 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
   }
   Future<List> load() async {
     String unitsString = "";
-    for (int i = 0; i < course.units.length; i++) {
-      unitsString += course.units[i].title + ", ";
+    for (int i = 0; i < course.units!.length; i++) {
+      unitsString += (course.units![i].title + ", ")!;
     };
     print(unitsString);
     String response = await GeminiAPI.getGeminiData("""

@@ -26,7 +26,7 @@ class _UnitFieldState extends State<UnitField> {
             width: MediaQuery.of(context).size.width - 100,
             child: TextField(
               onChanged: (text) {
-                widget.course.units[widget.i].title = text;
+                widget.course.units?[widget.i].title = text;
               },
               controller: _textController,
               decoration: InputDecoration(
@@ -58,7 +58,7 @@ class _UnitFieldState extends State<UnitField> {
             child: Align(
               child: TextButton(
                 onPressed: () {
-                  setState((){widget.course.units.removeAt(widget.i);});
+                  setState((){widget.course.units?.removeAt(widget.i);});
                 },
                 child: Icon(Icons.delete, color: Colors.white, size: 32.0),
               ),

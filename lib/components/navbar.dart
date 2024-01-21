@@ -13,6 +13,7 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   late int index = widget.index;
+
   late final List<Widget> _content = <Widget>[
     Home(user: widget.user),
     Home(user: widget.user),
@@ -22,8 +23,7 @@ class _NavBarState extends State<NavBar> {
   ];
 
   void _onItemTapped(int index_tmp) {
-    print('index:${index}');
-    print('index_tmp:${index_tmp}');
+    print(widget.user.username);
 
     setState(() {
       index = index_tmp;
