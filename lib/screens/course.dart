@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/screens/chapter.dart';
+import 'package:sample/utils/models/course.dart';
 import 'package:sample/utils/models/question.dart';
 
 class CourseScreen extends StatelessWidget {
@@ -10,6 +11,7 @@ class CourseScreen extends StatelessWidget {
   final int totalUnits;
   final String author;
   final bool library;
+
   const CourseScreen(
       {super.key,
       required this.image,
@@ -17,7 +19,8 @@ class CourseScreen extends StatelessWidget {
       required this.progress,
       required this.totalUnits,
       required this.author,
-      required this.library});
+      required this.library,
+      });
 
   @override
   Widget build(BuildContext context) {

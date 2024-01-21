@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sample/screens/course_gen/new_course.dart';
 import 'package:sample/utils/gemini.dart';
+import 'package:sample/utils/models/chapter.dart';
 import 'package:sample/utils/models/course.dart';
 import 'dart:convert';
 
@@ -12,7 +14,7 @@ class ChapterGenScreen extends StatefulWidget {
 
 class _ChapterGenScreenState extends State<ChapterGenScreen> {
   Course course;
-  bool loading = false;
+  bool loading = true;
   late List body;
   _ChapterGenScreenState({required this.course});
   void initState() {
@@ -27,7 +29,6 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
     for (int i = 0; i < course.units.length; i++) {
       unitsString += course.units[i].title + ", ";
     };
-    print(unitsString);
     String response = await GeminiAPI.getGeminiData("""
     ${unitsString} 
     It is your job to create a course about ${course.title}. The user has requested to create chapters for each of the above units. Then, for each chapter, provide a detailed youtube search query that can be used to find an informative educational video for each chapter. Each query should give an educational informative course in youtube. IMPORTANT: Give the response in a JSON array like the example below with the title of each array element corresponding to the unit title and then the chapters for that unit.\n
@@ -67,7 +68,16 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
         ]
       }
     ]""");
-    final body = json.decode(response);
+    final body = await json.decode(response);
+
+
+    for ( int i = 0; i < body.length; i++) {
+      course.units[i].chapters = [];
+      for (int j = 0; j < body[i]['chapters'].length; j++) {
+        Chapter chapter = Chapter(id:body[i]['chapters'][j]['youtube_search_query'].replaceAll(RegExp(' +'), ' '), title: body[i]['chapters'][j]['chapter_title'],query:body[i]['chapters'][j]['youtube_search_query']);
+        course.units[i].chapters.add(chapter);
+      }
+    }
     if(response != null) {
       setState(() {
         loading = false;
@@ -77,7 +87,6 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    print(body);
     return loading ? Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -93,17 +102,40 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
       ),
     ) : (
       Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: ElevatedButton(
-          onPressed: () {},
-          child: Container(
-            child: Text('submit')
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xff009966),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100.0),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NewCoursePage(course: course, body: body)),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical:12.0),
+            child: Text(
+                'Create Course',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                )
+            ),
           )
+
         ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:18.0),
                   child: Text(
