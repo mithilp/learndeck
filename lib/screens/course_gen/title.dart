@@ -29,7 +29,7 @@ class TitleScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Home(user: this.user)),
+                      builder: (context) => NavBar(user: user, index: 0)),
                   );
                 },
                 elevation: 0.0,
