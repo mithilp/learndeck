@@ -42,7 +42,7 @@ class GeminiAPI {
     );
     if (response.statusCode == 200){
       var jsonResponse = jsonDecode(response.body);
-      return jsonResponse.toString();
+      return jsonResponse['candidates'][0]['content']['parts'][0]['text'].toString();
     } else {
       return 'Error 400: Request Failed';
     }
