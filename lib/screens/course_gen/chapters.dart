@@ -105,7 +105,7 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
         course.units?[i].chapters = [];
         for (int j = 0; j < body[i]['chapters'].length; j++) {
           Chapter chapter = Chapter(
-              id: M.ObjectId().oid ,
+              id: M.ObjectId().oid,
               title: body[i]['chapters'][j]['chapter_title'],
               query: body[i]['chapters'][j]['youtube_search_query'],
               video: '',
@@ -129,6 +129,7 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
     The user has requested to create chapters for each of the above units. 
     Then, for each chapter, provide a detailed youtube search query that can be used to find an informative educational video for each chapter.
     Each query should give an educational informative course in youtube. 
+    Limit to at most 4 chapters per unit.
     IMPORTANT: Give the response in a JSON array like the example below with the title of each array element corresponding to the unit title and then the chapters for that unit.\n
     [
       {
@@ -232,37 +233,105 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
           ]
         }
         ''', {'i': i, 'j': j}).then((response) async {
-          var res =
-              await json.decode(response['response'].replaceAll(']', '\]'));
-          print(res['quiz'][0]);
+          try {
+            var res =
+                await json.decode(response['response'].replaceAll(']', '\]'));
 
-          // get yt video
-          var video =
-              await YouTubeAPI.getVideo(chapter['youtube_search_query']);
+            // get yt video
+            var video =
+                await YouTubeAPI.getVideo(chapter['youtube_search_query']);
 
-          List<Question> questions = [];
-          // turn json quiz into list of questions
-          for (var question in res['quiz']) {
-            questions.add(Question(
-                id: M.ObjectId().oid,
-                text: question['question'],
-                answer: question['answer'],
-                explanation: question['explanation'] ?? 'No explanation',
-                choices: List<String>.from(question['choices'] as List)));
+            List<Question> questions = [];
+            // turn json quiz into list of questions
+            for (var question in res['quiz']) {
+              questions.add(Question(
+                  id: M.ObjectId().oid,
+                  text: question['question'],
+                  answer: question['answer'],
+                  explanation: question['explanation'] ?? 'No explanation',
+                  choices: List<String>.from(question['choices'] as List)));
+            }
+
+            // update loading state
+            var i = response['data']['i'];
+            var j = response['data']['j'];
+            setState(() {
+              loadingStates[i][j] = 2;
+              finalChapters[i][j] = Chapter(
+                  id: M.ObjectId().oid,
+                  title: res['title'],
+                  video: video,
+                  summary: res['summary'],
+                  questions: questions);
+            });
+          } catch (e) {
+            GeminiAPI.getGeminiDataAndPassData('''
+        We are creating a course about ${course.title}. 
+        One of the chapters of the course is ${chapter['chapter_title']}. 
+        Create a short description about the topic. 
+        Additionally, create a quiz about the topic.
+        The quiz should be multiple choice with 3-5 questions. 
+        Each multiple choice question should have only one correct answer.
+        IMPORTANT: Give the response in a JSON object like the example below.
+        The "answer" field should be the index of the correct answer in the "choices" array. Remember indeces start at 0.
+        
+        {
+          "title": "Battle of Stalingrad",
+          "summary": "The Battle of Stalingrad, which took place from August 23, 1942, to February 2, 1943, during World War II, was a pivotal conflict between the Soviet Union and Nazi Germany. Stalingrad (now Volgograd) in southwestern Russia was the battleground. The Soviets successfully defended the city, marking a turning point in the war. The brutal urban warfare, harsh winter conditions, and the encirclement of German forces contributed to significant losses on both sides. The Soviet victory at Stalingrad is considered one of the major milestones leading to the eventual defeat of the Axis powers in the Eastern Front.",
+          "quiz": [
+            {
+              "question": "What was the Battle of Stalingrad?",
+              "explanation": "The Battle of Stalingrad was a major battle between the Germans and the Russians. All the other choices are false information.",
+              "choices": ["It was a battle between the Germans and the Russians.", "It was a battle between the Germans and the Americans.","It was a battle between the Germans and the British.", "It was a battle between the Germans and the French."],
+              "answer": 0
+            },
+            {
+              "question": "What was the outcome of the Battle of Stalingrad?",
+              "explanation": "The Germans lost the battle and were forced to retreat. All the other choices are false information.",
+              "choices": ["The Germans won the battle.", "The Russians won the battle.","The battle was a draw.", "The battle was never finished."],
+              "answer": 1
+            },
+            {
+              "question": "What was the significance of the Battle of Stalingrad?",
+              "explanation": "The Battle of Stalingrad was a major turning point in World War II. All the other choices are false information.",
+              "choices": ["It was the first battle of World War II.", "It was the last battle of World War II.","It was the most important battle of World War II.", "It was the least important battle of World War II."],
+              "answer": 2
+            }
+          ]
+        }
+        ''', {'i': i, 'j': j}).then((response) async {
+              var res =
+                  await json.decode(response['response'].replaceAll(']', '\]'));
+
+              // get yt video
+              var video =
+                  await YouTubeAPI.getVideo(chapter['youtube_search_query']);
+
+              List<Question> questions = [];
+              // turn json quiz into list of questions
+              for (var question in res['quiz']) {
+                questions.add(Question(
+                    id: M.ObjectId().oid,
+                    text: question['question'],
+                    answer: question['answer'],
+                    explanation: question['explanation'] ?? 'No explanation',
+                    choices: List<String>.from(question['choices'] as List)));
+              }
+
+              // update loading state
+              var i = response['data']['i'];
+              var j = response['data']['j'];
+              setState(() {
+                loadingStates[i][j] = 2;
+                finalChapters[i][j] = Chapter(
+                    id: M.ObjectId().oid,
+                    title: res['title'],
+                    video: video,
+                    summary: res['summary'],
+                    questions: questions);
+              });
+            });
           }
-
-          // update loading state
-          var i = response['data']['i'];
-          var j = response['data']['j'];
-          setState(() {
-            loadingStates[i][j] = 2;
-            finalChapters[i][j] = Chapter(
-                id: M.ObjectId().oid,
-                title: res['title'],
-                video: video,
-                summary: res['summary'],
-                questions: questions);
-          });
         });
         j++;
       }
@@ -277,12 +346,13 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
       }
     }
 
-    await MongoDB.addCourse(course);
+    print("saving");
+
+    // await MongoDB.addCourse(course);
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-          builder: (context) => CourseScreen(course: course)),
+      MaterialPageRoute(builder: (context) => CourseScreen(course: course)),
     );
   }
 
@@ -320,7 +390,6 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
                         ? null
                         : () {
                             save();
-                            
                           }
                     : () {
                         create();

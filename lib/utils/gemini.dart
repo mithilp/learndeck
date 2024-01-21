@@ -79,10 +79,20 @@ class GeminiAPI {
     );
     if (response.statusCode == 200){
       var jsonResponse = jsonDecode(response.body);
-      return {
-        'response': jsonResponse['candidates'][0]['content']['parts'][0]['text'].toString(),
-        'data': data
-      };
+      if (jsonResponse['candidates']!= null) {
+
+        if (jsonResponse['candidates'][0]['content'] != null) {
+
+        }
+        return {
+          'response': jsonResponse['candidates'][0]['content']['parts'][0]
+                  ['text']
+              .toString(),
+          'data': data
+        };
+      }else {
+        throw Exception('Request Failed');
+      }
     } else {
       var response = await http.post(
         Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${dotenv.env['GEMINI_API']}'),
