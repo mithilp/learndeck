@@ -198,4 +198,58 @@ class MongoDB {
           progress: 0);
     }
   }
+
+  static Future<void> addCourse(Course course) async {
+    List<String> unitIds = [];
+    course.units?.forEach((unit) {
+      unitIds.add(unit.id);
+    });
+    await _db?.collection('courses').insert({
+      '_id': M.ObjectId.fromHexString(course.id),
+      'title': course.title,
+      'author': course.author,
+      'completed': false,
+      'image': course.image,
+      '${course.author}_library': true,
+      '${course.author}_progress': 0,
+      'units': unitIds,
+    });
+
+    for (var unit in course.units!) {
+      List<String> chapterIds = [];
+      unit.chapters?.forEach((chapter) {
+        chapterIds.add(chapter.id);
+      });
+      await _db?.collection('units').insert({
+        '_id': M.ObjectId.fromHexString(unit.id),
+        'title': unit.title,
+        'chapters': chapterIds,
+      });
+
+      for (var chapter in unit.chapters!) {
+        List<String> questionIds = [];
+        chapter.questions?.forEach((question) {
+          questionIds.add(question.id);
+        });
+
+        await _db?.collection('chapters').insert({
+          '_id': M.ObjectId.fromHexString(chapter.id),
+          'title': chapter.title,
+          'summary': chapter.summary,
+          'video': chapter.video,
+          'quiz': questionIds,
+        });
+
+        for (var question in chapter.questions!) {
+          await _db?.collection('questions').insert({
+            '_id': M.ObjectId.fromHexString(question.id),
+            'text': question.text,
+            'answer': question.answer,
+            'explanation': question.explanation,
+            'choices': question.choices,
+          });
+        }
+      }
+    }
+  }
 }

@@ -26,7 +26,9 @@ class CourseScreen extends StatelessWidget {
                   color: const Color(0xff009966),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(course.image),
+                    image: NetworkImage(course.image.length > 0
+                        ? course.image
+                        : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
                   ),
                 ),
                 height: 250,
@@ -124,7 +126,7 @@ class CourseScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ListView.builder(
-                      padding: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: course.units?.length,
@@ -142,31 +144,41 @@ class CourseScreen extends StatelessWidget {
                                     )),
                                 ListView.builder(
                                     padding: EdgeInsets.zero,
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: course.units?.length,
+                                    itemCount:
+                                        course.units![i].chapters?.length,
                                     itemBuilder: (context, j) {
                                       return ListTile(
                                         contentPadding: EdgeInsets.zero,
                                         leading: TextButton(
                                             onPressed: () async {
-                                              course.units![i].chapters![j].questions = await MongoDB.getQuestions(course.units![i].chapters![j].questionIds);
-
+                                              course.units![i].chapters![j]
+                                                      .questions = course.units![i].chapters![j]
+                                                  .questions ??
+                                                  await MongoDB.getQuestions(
+                                                      course
+                                                          .units![i]
+                                                          .chapters![j]
+                                                          .questionIds);
 
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         ChapterScreen(
-                                                          unit: j,
-                                                          chapter: 0,
-                                                          chapterData: course.units![i].chapters![j],
+                                                          unit: i,
+                                                          chapter: j,
+                                                          chapterData: course
+                                                              .units![i]
+                                                              .chapters![j],
                                                         )),
                                               );
                                             },
                                             child: Text(
-                                              course.units![i].chapters![j]
-                                                  .title,
+                                              course
+                                                  .units![i].chapters![j].title,
                                               style: GoogleFonts.figtree(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w800,

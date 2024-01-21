@@ -63,7 +63,7 @@ class ChapterScreen extends StatelessWidget {
                                     style: GoogleFonts.figtree(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w800)),
-                                Text('title',
+                                Text(chapterData.title,
                                     style: GoogleFonts.figtree(
                                         fontSize: 30,
                                         fontWeight: FontWeight.w800)),

@@ -15,7 +15,7 @@ class CourseGenerator {
         author: author,
         units: units,
         added: true,
-        image: '',
+        image: 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
         progress: 0);
   }
 }

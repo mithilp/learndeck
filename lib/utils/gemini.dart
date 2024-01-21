@@ -4,18 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GeminiAPI {
-  static Map<String, String> getHeader() {
-    return {
-      'Content-Type': 'application/json',
-    };
-  }
-
   static Future<String> getGeminiData(message) async{
-    print('entered method');
     var header = {
       'Content-Type': 'application/json',
     };
-    print('got header');
     final Map<String, dynamic> requestBody = {
       'contents': [
         {

@@ -65,10 +65,10 @@ class _UnitsPageState extends State<UnitsPage> {
                         )),
               );
             },
-            child: const Padding(
-              padding: EdgeInsets.all(6.0),
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
               child: Text('Generate Chapters',
-                  style: TextStyle(
+                  style: GoogleFonts.figtree(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.w700)),

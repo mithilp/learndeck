@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mongo_dart/mongo_dart.dart' as M;
 import 'package:sample/components/navbar.dart';
-// import 'package:sample/screens/course_gen/new_course.dart';
+import 'package:sample/screens/course.dart';
 import 'package:sample/utils/gemini.dart';
 import 'package:sample/utils/models/chapter.dart';
 import 'package:sample/utils/models/course.dart';
+import 'package:sample/utils/models/question.dart';
 import 'dart:convert';
 
 import 'package:sample/utils/models/user.dart';
+import 'package:sample/utils/mongodb.dart';
+import 'package:sample/utils/youtube_api.dart';
 
 class ChapterGenScreen extends StatefulWidget {
   final Course course;
@@ -22,6 +28,7 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
   Course course;
   bool loading = true;
   List loadingStates = [];
+  List<List<Chapter?>> finalChapters = [];
   late List body;
 
   _ChapterGenScreenState({required this.course});
@@ -35,16 +42,21 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
       setState(() {
         body = result;
         loadingStates = newLoadingStates;
+        finalChapters = List.generate(
+            result.length,
+            (index) =>
+                List.generate(result[index]['chapters'].length, (j) => null));
       });
     });
   }
 
   Future<List> load() async {
-    String unitsString = '';
-    for (int i = 0; i < course.units!.length; i++) {
-      unitsString += ('${course.units![i].title}, ');
-    }
-    String response = await GeminiAPI.getGeminiData('''
+    try {
+      String unitsString = '';
+      for (int i = 0; i < course.units!.length; i++) {
+        unitsString += ('${course.units![i].title}, ');
+      }
+      String response = await GeminiAPI.getGeminiData('''
     $unitsString 
     It is your job to create a course about ${course.title}. 
     The user has requested to create chapters for each of the above units. 
@@ -87,25 +99,92 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
         ]
       }
     ]''');
-    final body = await json.decode(response);
+      final body = await json.decode(response);
 
-    for (int i = 0; i < body.length; i++) {
-      course.units?[i].chapters = [];
-      for (int j = 0; j < body[i]['chapters'].length; j++) {
-        Chapter chapter = Chapter(
-            id: body[i]['chapters'][j]['youtube_search_query']
-                .replaceAll(RegExp(' +'), ' '),
-            title: body[i]['chapters'][j]['chapter_title'],
-            query: body[i]['chapters'][j]['youtube_search_query'],
-            video: '',
-            summary: '');
-        course.units?[i].chapters?.add(chapter);
+      for (int i = 0; i < body.length; i++) {
+        course.units?[i].chapters = [];
+        for (int j = 0; j < body[i]['chapters'].length; j++) {
+          Chapter chapter = Chapter(
+              id: M.ObjectId().oid ,
+              title: body[i]['chapters'][j]['chapter_title'],
+              query: body[i]['chapters'][j]['youtube_search_query'],
+              video: '',
+              summary: '');
+          course.units?[i].chapters?.add(chapter);
+        }
       }
+      setState(() {
+        loading = false;
+      });
+      return body;
+    } catch (e) {
+      print('Retrying...');
+      String unitsString = '';
+      for (int i = 0; i < course.units!.length; i++) {
+        unitsString += ('${course.units![i].title}, ');
+      }
+      String response = await GeminiAPI.getGeminiData('''
+    $unitsString 
+    It is your job to create a course about ${course.title}. 
+    The user has requested to create chapters for each of the above units. 
+    Then, for each chapter, provide a detailed youtube search query that can be used to find an informative educational video for each chapter.
+    Each query should give an educational informative course in youtube. 
+    IMPORTANT: Give the response in a JSON array like the example below with the title of each array element corresponding to the unit title and then the chapters for that unit.\n
+    [
+      {
+        "title": "World War II Battles",
+        "chapters": [
+          {
+          "youtube_search_query": "all about important battles in WW2",
+          "chapter_title": "Important Battles"
+          },
+          {
+          "youtube_search_query": "battle strategies in WW2",
+          "chapter_title": "Battle Strategies"
+          },
+          {
+          "youtube_search_query": "Battle of Stalingrad short explanation",
+          "chapter_title": "Battle of Stalingrad"
+          } etc...
+        ]
+      },
+      {
+        "title": "World War II Alliances",
+        "chapters": [
+          {
+          "youtube_search_query": "all about the allied powers in WW2",
+          "chapter_title": "Allied Powers"
+          },
+          {
+          "youtube_search_query": "all about the axis powers in WW2",
+          "chapter_title": "Axis Powers"
+          },
+          {
+          "youtube_search_query": "netural powers and their roles in WW2",
+          "chapter_title": "Neutral Powers"
+          } etc...
+        ]
+      }
+    ]''');
+      final body = await json.decode(response);
+
+      for (int i = 0; i < course.units!.length; i++) {
+        course.units?[i].chapters = [];
+        for (int j = 0; j < body[i]['chapters'].length; j++) {
+          Chapter chapter = Chapter(
+              id: M.ObjectId().oid,
+              title: body[i]['chapters'][j]['chapter_title'],
+              query: body[i]['chapters'][j]['youtube_search_query'],
+              video: '',
+              summary: '');
+          course.units?[i].chapters?.add(chapter);
+        }
+      }
+      setState(() {
+        loading = false;
+      });
+      return body;
     }
-    setState(() {
-      loading = false;
-    });
-    return body;
   }
 
   Future<void> create() async {
@@ -153,23 +232,58 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
           ]
         }
         ''', {'i': i, 'j': j}).then((response) async {
-          var res = await json.decode(response['response']);
+          var res =
+              await json.decode(response['response'].replaceAll(']', '\]'));
+          print(res['quiz'][0]);
 
           // get yt video
+          var video =
+              await YouTubeAPI.getVideo(chapter['youtube_search_query']);
 
-          // save to db
+          List<Question> questions = [];
+          // turn json quiz into list of questions
+          for (var question in res['quiz']) {
+            questions.add(Question(
+                id: M.ObjectId().oid,
+                text: question['question'],
+                answer: question['answer'],
+                explanation: question['explanation'] ?? 'No explanation',
+                choices: List<String>.from(question['choices'] as List)));
+          }
 
           // update loading state
           var i = response['data']['i'];
           var j = response['data']['j'];
           setState(() {
             loadingStates[i][j] = 2;
+            finalChapters[i][j] = Chapter(
+                id: M.ObjectId().oid,
+                title: res['title'],
+                video: video,
+                summary: res['summary'],
+                questions: questions);
           });
         });
         j++;
       }
       i++;
     }
+  }
+
+  Future<void> save() async {
+    for (int i = 0; i < course.units!.length; i++) {
+      for (int j = 0; j < course.units![i].chapters!.length; j++) {
+        course.units![i].chapters![j] = finalChapters[i][j]!;
+      }
+    }
+
+    await MongoDB.addCourse(course);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CourseScreen(course: course)),
+    );
   }
 
   @override
@@ -205,19 +319,27 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
                                 .contains(3)
                         ? null
                         : () {
-                            print("all done");
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => NewCoursePage(course: course, body: body)),
-                            // );
+                            save();
+                            
                           }
                     : () {
                         create();
                       },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text('Create Course',
+                  child: Text(
+                      (loadingStates.expand((x) => x).toList()).contains(1) ||
+                              (loadingStates.expand((x) => x).toList())
+                                  .contains(2) ||
+                              (loadingStates.expand((x) => x).toList())
+                                  .contains(3)
+                          ? (loadingStates.expand((x) => x).toList())
+                                      .contains(1) ||
+                                  (loadingStates.expand((x) => x).toList())
+                                      .contains(3)
+                              ? "Loading"
+                              : "Save & Finish"
+                          : "Create Course",
                       style: GoogleFonts.figtree(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
