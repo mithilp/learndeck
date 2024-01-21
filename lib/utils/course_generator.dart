@@ -11,7 +11,6 @@ class CourseGenerator {
     ];
 
     final units = unitTitles.map((title) => Unit(id:title, title: title)).toList();
-
     return Course(
       id: title.toLowerCase().replaceAll(' ', '_'),
         title: title, author: author, units: units);
