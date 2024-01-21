@@ -7,9 +7,9 @@ class Course {
   final String image;
   final int progress;
   final bool added;
-  final List<Unit>? units;
+  late List<Unit>? units;
   final List<String>? unitIds;
-  const Course({
+  Course({
     required this.added,
     required this.image,
     required this.progress,

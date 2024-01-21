@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sample/components/quiz.dart';
+import 'package:sample/utils/models/chapter.dart';
 import 'package:sample/utils/models/question.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ChapterScreen extends StatelessWidget {
-  final String title;
-  final String video;
-  final String summary;
-  final List<Question> quiz;
+  final Chapter chapterData;
   final int unit;
   final int chapter;
   ChapterScreen({
     super.key,
-    required this.title,
-    required this.video,
-    required this.summary,
-    required this.quiz,
+    required this.chapterData,
     required this.unit,
     required this.chapter,
   });
@@ -24,7 +19,7 @@ class ChapterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: video,
+      initialVideoId: chapterData.video,
       flags: YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
@@ -104,7 +99,7 @@ class ChapterScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                             summary,
+                              chapterData.summary,
                               style: GoogleFonts.figtree(
                                 fontSize: 18,
                               ),
@@ -118,7 +113,7 @@ class ChapterScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 10),
-                            QuizComponent(quiz: quiz,)
+                            QuizComponent(quiz: chapterData.questions as List<Question>,)
                           ],
                         ),
                       ),

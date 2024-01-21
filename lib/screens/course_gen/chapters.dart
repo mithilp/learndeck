@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sample/screens/course_gen/new_course.dart';
+// import 'package:sample/screens/course_gen/new_course.dart';
 import 'package:sample/utils/gemini.dart';
 import 'package:sample/utils/models/chapter.dart';
 import 'package:sample/utils/models/course.dart';
@@ -72,10 +72,10 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
 
 
     for ( int i = 0; i < body.length; i++) {
-      course.units[i].chapters = [];
+      course.units?[i].chapters = [];
       for (int j = 0; j < body[i]['chapters'].length; j++) {
-        Chapter chapter = Chapter(id:body[i]['chapters'][j]['youtube_search_query'].replaceAll(RegExp(' +'), ' '), title: body[i]['chapters'][j]['chapter_title'],query:body[i]['chapters'][j]['youtube_search_query']);
-        course.units[i].chapters.add(chapter);
+        Chapter chapter = Chapter(id:body[i]['chapters'][j]['youtube_search_query'].replaceAll(RegExp(' +'), ' '), title: body[i]['chapters'][j]['chapter_title'],query:body[i]['chapters'][j]['youtube_search_query'], video: '', summary: '');
+        course.units?[i].chapters?.add(chapter);
       }
     }
     if(response != null) {
@@ -111,11 +111,11 @@ class _ChapterGenScreenState extends State<ChapterGenScreen> {
             ),
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => NewCoursePage(course: course, body: body)),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //       builder: (context) => NewCoursePage(course: course, body: body)),
+            // );
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical:12.0),

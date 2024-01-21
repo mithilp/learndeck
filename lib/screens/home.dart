@@ -31,81 +31,75 @@ class Home extends StatelessWidget {
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
-                child: Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: 280,
-                                  child: Text('Ready to study, ${user.username}?',
-                                      style: GoogleFonts.figtree(
-                                        fontSize: 34,
-                                        color: Colors.black,
-                                        height: 1.15,
-                                        fontWeight: FontWeight.w800,
-                                      )),
-                                ),
-                                const Image(
-                                  image: AssetImage('assets/logo.png'),
-                                  height: 40,
-                                ),
-                              ],
+                            SizedBox(
+                              width: 280,
+                              child: Text('Ready to study, ${user.username}?',
+                                  style: GoogleFonts.figtree(
+                                    fontSize: 34,
+                                    color: Colors.black,
+                                    height: 1.15,
+                                    fontWeight: FontWeight.w800,
+                                  )),
                             ),
-                            SizedBox(height: 20),
-                            Text("Today's featured",
-                                style: GoogleFonts.figtree(
-                                  fontSize: 34,
-                                  color: Colors.black,
-                                  height: 1.15,
-                                  fontWeight: FontWeight.w800,
-                                )),
-                            SizedBox(height: 10),
-                            Thumbnail(
-                              image: data.image,
-                              title: data.title,
-                              progress: data.progress,
-                              totalUnits: data.unitIds!.length,
-                              author: data.author,
-                              library: data.added,
-                              large: true,
+                            const Image(
+                              image: AssetImage('assets/logo.png'),
+                              height: 40,
                             ),
-                            SizedBox(height: 20),
-                            Text('Your recent courses',
-                                style: GoogleFonts.figtree(
-                                  fontSize: 34,
-                                  color: Colors.black,
-                                  height: 1.15,
-                                  fontWeight: FontWeight.w800,
-                                )),
-                            SizedBox(height: 10),
-                            Thumbnail(
-                              image:
-                              'https://media.self.com/photos/5b6b0b0cbb7f036f7f5cbcfa/master/pass/apples.jpg',
-                              title: 'Types of Apples',
-                              progress: 6,
-                              totalUnits: 6,
-                              author: 'adeshmukh',
-                              library: false,
-                              large: false,
-                            ),
-                            SizedBox(height: 20),
-                            Thumbnail(
-                              image:
-                              'https://media.self.com/photos/5b6b0b0cbb7f036f7f5cbcfa/master/pass/apples.jpg',
-                              title: 'Types of Apples',
-                              progress: 6,
-                              totalUnits: 6,
-                              author: 'adeshmukh',
-                              library: false,
-                              large: false,
-                            ),
-                          ]),
-                    )),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Text("Today's featured",
+                            style: GoogleFonts.figtree(
+                              fontSize: 34,
+                              color: Colors.black,
+                              height: 1.15,
+                              fontWeight: FontWeight.w800,
+                            )),
+                        SizedBox(height: 10),
+                        Thumbnail(
+                          course: data,
+                          large: true,
+                        ),
+                        SizedBox(height: 20),
+                        Text('Your recent courses',
+                            style: GoogleFonts.figtree(
+                              fontSize: 34,
+                              color: Colors.black,
+                              height: 1.15,
+                              fontWeight: FontWeight.w800,
+                            )),
+                        SizedBox(height: 10),
+                        // Thumbnail(
+                        //   image:
+                        //   'https://media.self.com/photos/5b6b0b0cbb7f036f7f5cbcfa/master/pass/apples.jpg',
+                        //   title: 'Types of Apples',
+                        //   progress: 6,
+                        //   totalUnits: 6,
+                        //   author: 'adeshmukh',
+                        //   library: false,
+                        //   large: false,
+                        // ),
+                        // SizedBox(height: 20),
+                        // Thumbnail(
+                        //   image:
+                        //   'https://media.self.com/photos/5b6b0b0cbb7f036f7f5cbcfa/master/pass/apples.jpg',
+                        //   title: 'Types of Apples',
+                        //   progress: 6,
+                        //   totalUnits: 6,
+                        //   author: 'adeshmukh',
+                        //   library: false,
+                        //   large: false,
+                        // ),
+                      ]),
+                ),
               ),
             ),
           );
