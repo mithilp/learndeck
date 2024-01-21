@@ -155,6 +155,13 @@ class MongoDB {
     return questions;
   }
 
+  static Future<List<Course>> getHome(String username) async {
+
+
+
+    return [await getFeatured(username), ...(await getStarred(username))];
+  }
+
   static Future<Course> getFeatured(String username) async {
     try {
       var val = await _db

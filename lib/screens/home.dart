@@ -12,8 +12,8 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: MongoDB.getFeatured(user.username),
-      builder: (BuildContext context, AsyncSnapshot<Course> snapshot) {
+      future: MongoDB.getHome(user.username),
+      builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(
@@ -25,12 +25,13 @@ class Home extends StatelessWidget {
             child: Text('Error: ${snapshot.error}'),
           );
         } else {
-          Course data = snapshot.data!;
+          List<Course> data = snapshot.data!;
           // Use the loaded data to build your widget
           return Scaffold(
             body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0, vertical: 20.0),
                 child: SingleChildScrollView(
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -65,7 +66,7 @@ class Home extends StatelessWidget {
                             )),
                         const SizedBox(height: 10),
                         Thumbnail(
-                          course: data,
+                          course: data[0],
                           large: true,
                         ),
                         const SizedBox(height: 20),
@@ -77,27 +78,20 @@ class Home extends StatelessWidget {
                               fontWeight: FontWeight.w800,
                             )),
                         const SizedBox(height: 10),
-                        // Thumbnail(
-                        //   image:
-                        //   'https://media.self.com/photos/5b6b0b0cbb7f036f7f5cbcfa/master/pass/apples.jpg',
-                        //   title: 'Types of Apples',
-                        //   progress: 6,
-                        //   totalUnits: 6,
-                        //   author: 'adeshmukh',
-                        //   library: false,
-                        //   large: false,
-                        // ),
-                        // SizedBox(height: 20),
-                        // Thumbnail(
-                        //   image:
-                        //   'https://media.self.com/photos/5b6b0b0cbb7f036f7f5cbcfa/master/pass/apples.jpg',
-                        //   title: 'Types of Apples',
-                        //   progress: 6,
-                        //   totalUnits: 6,
-                        //   author: 'adeshmukh',
-                        //   library: false,
-                        //   large: false,
-                        // ),
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: data.length - 2,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                child: Thumbnail(
+                                  course: data[index + 2],
+                                  large: false,
+                                ),
+                              );
+                            }),
                       ]),
                 ),
               ),
@@ -108,5 +102,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
-
