@@ -4,7 +4,7 @@ import 'package:sample/utils/models/unit.dart';
 
 class CourseGenerator {
   static Course generate(String title, String author) {
-    const unitTitles = ['', '', ''];
+    const unitTitles = [''];
 
     final units = unitTitles
         .map((title) => Unit(id: ObjectId().oid, title: title))

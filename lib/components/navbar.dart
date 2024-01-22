@@ -17,7 +17,7 @@ class _NavBarState extends State<NavBar> {
 
   late final List<Widget> _content = <Widget>[
     Home(user: widget.user),
-    Home(user: widget.user),
+    LibraryPage(user: widget.user),
     TitleScreen(user: widget.user, firstTime: false),
     LibraryPage(user: widget.user),
     Home(user: widget.user)
